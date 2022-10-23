@@ -7,12 +7,19 @@ bool Box::intersectLocal( const ray& r, isect& i ) const
 {
 	// YOUR CODE HERE:
     // Add box intersection code here.
+	// it currently ignores all boxes and just returns false.
+	vec3f R0 = r.getPosition();
+	vec3f Rd = r.getDirection();
 
 	double tMin = -1.0e308; // 1.0e308 is close to infinity... close enough for us!
 	double tMax = 1.0e308;
 
-	BoundingBox localBoundingBox = this->ComputeLocalBoundingBox();
+	double ttemp;
+	int N_axis;
+	vec3f N{ 0.0, 0.0, 0.0 };
+	BoundingBox localBoundingBox = ComputeLocalBoundingBox();
 
+	/*
 	if (localBoundingBox.intersect(r, tMin, tMax))
 	{
 		i.obj = this;
@@ -21,7 +28,8 @@ bool Box::intersectLocal( const ray& r, isect& i ) const
 		return true;
 	}
 	else return false;
-	/*
+	*/
+	
 	for (int currentaxis = 0; currentaxis < 3; currentaxis++)
 	{
 
@@ -52,7 +60,10 @@ bool Box::intersectLocal( const ray& r, isect& i ) const
 		}
 
 		if (t1 > tMin)  // want largest tMin
+		{
 			tMin = t1;
+			N_axis = currentaxis;
+		}
 		if (t2 < tMax)	// want smallest tMax
 			tMax = t2;
 
@@ -62,5 +73,13 @@ bool Box::intersectLocal( const ray& r, isect& i ) const
 			return false;
 
 	}
-	*/
+
+	i.obj = this;
+	i.t = tMin;
+	// i.N = r.at(tMin).normalize();
+	if (Rd[N_axis] > 0.0) N[N_axis] = -1.0;
+	else N[N_axis] = 1.0;
+	i.N = N;
+
+	return true;
 }
