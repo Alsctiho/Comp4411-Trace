@@ -17,7 +17,7 @@
 //        |
 //        +- RayTracer::tracePixel
 //              |
-//              +- RayTracer::trace
+//              +- RayTracer::trace // TODO
 //                    |
 //                    +- Camera::rayThrough
 //                    |
@@ -27,7 +27,7 @@
 //                          |     |
 //                          |     +- <Geometry>::intersect
 //                          |           |
-//                          |           +- <Geometry>::intersectLocal
+//                          |           +- <Geometry>::intersectLocal // TODO
 //                          |
 //                          +- isect::getMaterial
 //                          |

@@ -15,6 +15,7 @@ class vec4f;
 class mat3f;
 class mat4f;
 
+
 // used as an exception during matrix inversion.
 class SingularMatrixException
 {};
@@ -58,6 +59,16 @@ public:
 		{ return n[i]; }
 	double operator []( int i ) const 
 		{ return n[i]; }
+
+	vec3f hadamard(const vec3f& v) const
+	{
+		vec3f a;
+		a[0] = n[0] * v.n[0];
+		a[1] = n[1] * v.n[1];
+		a[2] = n[2] * v.n[2];
+
+		return a;
+	}
 
 	// Cross product between this and 'b'
 	vec3f cross(const vec3f& b) const

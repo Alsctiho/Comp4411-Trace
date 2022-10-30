@@ -32,6 +32,11 @@ public:
 
 	virtual vec3f shade( Scene *scene, const ray& r, const isect& i ) const;
 
+    /* 
+    *   k* is the efficiency of the * material, 
+    *   to get the intensity of this surface point,
+    *   I(R) = I(aR) * k(aR) * C(dR)
+    */
     vec3f ke;                    // emissive
     vec3f ka;                    // ambient
     vec3f ks;                    // specular

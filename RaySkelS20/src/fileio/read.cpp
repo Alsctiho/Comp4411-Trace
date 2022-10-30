@@ -325,7 +325,7 @@ static void processGeometry( string name, Obj *child, Scene *scene,
 		}
 
         obj->setTransform(transform);
-		scene->add(obj);
+		scene->add(obj); // BoundingObject
 	}
 }
 
@@ -532,7 +532,14 @@ static void processObject( Obj *obj, Scene *scene, mmap& materials )
 		scene->add( new PointLight( scene, 
 			tupleToVec( getField( child, "position" ) ),
 			tupleToVec( getColorField( child ) ) ) );
-	} else if( 	name == "sphere" ||
+	} 
+	else if( name == "ambient_light" ) {
+		if (child == NULL) {
+			throw ParseError("No info for ambient_light");
+		}
+		scene->addAmbientLight(tupleToVec(getField(child, "ambient_light")));
+	} 
+	else if( 	name == "sphere" ||
 				name == "box" ||
 				name == "cylinder" ||
 				name == "cone" ||

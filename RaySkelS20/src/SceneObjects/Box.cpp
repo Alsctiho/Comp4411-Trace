@@ -32,8 +32,6 @@ bool Box::intersectLocal( const ray& r, isect& i ) const
 	
 	for (int currentaxis = 0; currentaxis < 3; currentaxis++)
 	{
-
-		
 		double vd = Rd[currentaxis];
 		double v0 = R0[currentaxis];
 		double vl = localBoundingBox.min[currentaxis];

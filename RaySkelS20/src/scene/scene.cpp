@@ -93,7 +93,6 @@ bool Geometry::intersect(const ray&r, isect&i) const
     } else {
         return false;
     }
-    
 }
 
 bool Geometry::intersectLocal( const ray& r, isect& i ) const
@@ -137,12 +136,24 @@ Scene::~Scene()
 	}
 }
 
+void Scene::addAmbientLight(vec3f color)
+{
+	if (ambientLight == nullptr)
+	{
+		ambientLight = new AmbientLight(this, color);
+	}
+	else
+	{
+		ambientLight->add(color);
+	}
+}
+
 // Get any intersection with an object.  Return information about the 
 // intersection through the reference parameter.
 bool Scene::intersect( const ray& r, isect& i ) const
 {
 	typedef list<Geometry*>::const_iterator iter;
-	iter j;
+	iter j; // dereference j is (Geometry*)
 
 	isect cur;
 	bool have_one = false;
@@ -198,4 +209,10 @@ void Scene::initScene()
 		else
 			nonboundedobjects.push_back(*j);
 	}
+}
+
+
+vec3f Scene::getAmbientColor()
+{
+	return (ambientLight) ? ambientLight->getColor() : vec3f(0.0, 0.0, 0.0);
 }

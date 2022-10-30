@@ -17,6 +17,11 @@ class SceneObject;
 
 class ray {
 public:
+	/// <summary>
+	/// construct a ray by its position and direction.
+	/// </summary>
+	/// <param name="pp">position</param>
+	/// <param name="dd">direction</param>
 	ray( const vec3f& pp, const vec3f& dd )
 		: p( pp ), d( dd ) {}
 	ray( const ray& other ) 
@@ -31,6 +36,7 @@ public:
 
 	vec3f getPosition() const { return p; }
 	vec3f getDirection() const { return d; }
+    vec3f getIsecPosition(double t) const { return p + t * d; }
 
 protected:
 	vec3f p;

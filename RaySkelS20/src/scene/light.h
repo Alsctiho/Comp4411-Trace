@@ -49,4 +49,18 @@ protected:
 	vec3f position;
 };
 
+class AmbientLight: SceneElement
+{
+private:
+	vec3f		color;
+
+public:
+	AmbientLight(Scene* scene, const vec3f& color)
+		: color(color), SceneElement(scene) {}
+
+	void add(vec3f other) { color += other; }
+
+	vec3f getColor() { return color; }
+};
+
 #endif // __LIGHT_H__

@@ -55,3 +55,5 @@ vec3f PointLight::shadowAttenuation(const vec3f& P) const
     // You should implement shadow-handling code here.
     return vec3f(1,1,1);
 }
+
+
