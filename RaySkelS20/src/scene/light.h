@@ -58,7 +58,7 @@ public:
 	AmbientLight(Scene* scene, const vec3f& color)
 		: color(color), SceneElement(scene) {}
 
-	void add(vec3f other) { color += other; }
+	void add(vec3f other) { color += other; color.clamp(); }
 
 	vec3f getColor() { return color; }
 };

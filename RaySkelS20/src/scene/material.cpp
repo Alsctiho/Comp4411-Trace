@@ -56,7 +56,6 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 			//double specular = pow(coss, shininess);
 			intensity += dAtt * coss * lCol.hadamard(ks);
 		}
-
 	}
 
 	return intensity;
