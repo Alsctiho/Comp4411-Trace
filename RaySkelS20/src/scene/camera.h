@@ -13,7 +13,7 @@ public:
     void setLook( const vec3f &viewDir, const vec3f &upDir );
     void setFOV( double );
     void setAspectRatio( double );
-    vec3f getEye() { return eye; }
+    vec3f getLook() { return look; }
 
     double getAspectRatio() { return aspectRatio; }
 private:

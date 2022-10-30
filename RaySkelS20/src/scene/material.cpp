@@ -6,7 +6,9 @@ namespace
 {
 	double clamp(double d)
 	{
-		return (d > 0) ? d : 0;
+		d = max(d, 0.0);
+		d = min(d, 1.0);
+		return d;
 	}
 }
 
@@ -38,18 +40,23 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 
 	for (auto cliter = scene->beginLights(); cliter != scene->endLights(); ++cliter)
 	{
-		// 6.5.3.2 diffuse reflection
 		vec3f lDir = (*cliter)->getDirection(isectP);
-		vec3f lCol = (*cliter)->getColor(isectP); // Color doesn't depend on isectP
-		double dAtt = (*cliter)->distanceAttenuation(isectP);
 		double cosd = clamp((-lDir).dot(isectN));
-		intensity += dAtt * cosd * lCol.hadamard(kd);
+		if (cosd > 0)
+		{
+			// 6.5.3.2 diffuse reflection
+			vec3f lCol = (*cliter)->getColor(isectP); // Color doesn't depend on isectP
+			double dAtt = (*cliter)->distanceAttenuation(isectP);
+			intensity += dAtt * cosd * lCol.hadamard(kd);
 
-		// 6.5.3.3 specular reflection
-		vec3f rDir = lDir - 2 * lDir.dot(isectN) * isectN;
-		vec3f cDir = -scene->getCamera()->getEye().normalize();
-		double coss = clamp(cDir.dot(rDir));
-		intensity += dAtt * coss * lCol.hadamard(ks);
+			// 6.5.3.3 specular reflection
+			vec3f rDir = lDir - 2 * lDir.dot(isectN) * isectN;
+			vec3f cDir = -scene->getCamera()->getLook().normalize();
+			double coss = clamp(cDir.dot(rDir));
+			//double specular = pow(coss, shininess);
+			intensity += dAtt * coss * lCol.hadamard(ks);
+		}
+
 	}
 
 	return intensity;
