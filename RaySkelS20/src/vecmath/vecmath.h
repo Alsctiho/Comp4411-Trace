@@ -686,10 +686,10 @@ inline vec3f::vec3f( const vec4f& v )
 	n[1] = v[1]; 
 	n[2] = v[2]; 
 }
-/*
+
 inline vec3f clamp( const vec3f& other )
 {
 	return maximum( vec3f(), minimum( other, vec3f( 1.0, 1.0, 1.0 ) ) );
 }
-*/
+
 #endif // __VECMATH_H__

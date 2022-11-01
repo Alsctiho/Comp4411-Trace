@@ -41,7 +41,6 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 
 	for (auto cliter = scene->beginLights(); cliter != scene->endLights(); ++cliter)
 	{
-
 		double dAtt = (*cliter)->distanceAttenuation(isectP);
 		vec3f Il = (*cliter)->getColor(isectP); // Color doesn't depend on isectP
 
@@ -54,9 +53,10 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 		}
 
 		// 6.5.3.3 specular reflection
-		vec3f R = L - 2 * L.dot(N) * N;
-		vec3f V = -scene->getCamera()->getLook().normalize();
-		double RdV = clamp(R.dot(V));
+		vec3f R = (L - 2 * NdL * N).normalize();
+		vec3f V = -(scene->getCamera()->getLook().normalize());
+		// vec3f V = r.getDirection().normalize();
+		double RdV = R.dot(V);
 		if (RdV > 0)
 		{
 			Iphong += pow(RdV, shininess * 128) * Il.hadamard(ks);
