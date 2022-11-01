@@ -31,32 +31,39 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 	// How can I get the intersaction point? 
 	// How can I get the light positions? ans: scene->beginLights() 
 
-	vec3f intensity;
+	vec3f Iphong = ke;
 	vec3f isectP = r.getIsecPosition(i.t);
-	vec3f isectN = i.N.normalize();
+	vec3f N = i.N.normalize();
+
 	// 6.5.3.1 ambient reflection
-	vec3f aCol = scene->getAmbientColor();
-	intensity += aCol.hadamard(ka);
+	vec3f Ia = scene->getAmbientColor();
+	Iphong += Ia.hadamard(ka);
 
 	for (auto cliter = scene->beginLights(); cliter != scene->endLights(); ++cliter)
 	{
-		vec3f lDir = (*cliter)->getDirection(isectP);
-		double cosd = clamp((-lDir).dot(isectN));
-		if (cosd > 0)
-		{
-			// 6.5.3.2 diffuse reflection
-			vec3f lCol = (*cliter)->getColor(isectP); // Color doesn't depend on isectP
-			double dAtt = (*cliter)->distanceAttenuation(isectP);
-			intensity += dAtt * cosd * lCol.hadamard(kd);
 
-			// 6.5.3.3 specular reflection
-			vec3f rDir = lDir - 2 * lDir.dot(isectN) * isectN;
-			vec3f cDir = -scene->getCamera()->getLook().normalize();
-			double coss = clamp(cDir.dot(rDir));
-			//double specular = pow(coss, shininess);
-			intensity += dAtt * coss * lCol.hadamard(ks);
+		double dAtt = (*cliter)->distanceAttenuation(isectP);
+		vec3f Il = (*cliter)->getColor(isectP); // Color doesn't depend on isectP
+
+		// 6.5.3.2 diffuse reflection
+		vec3f L = (*cliter)->getDirection(isectP).normalize();
+		double NdL = N.dot(L);
+		if (NdL > 0)
+		{
+			Iphong += NdL * Il.hadamard(kd);
 		}
+
+		// 6.5.3.3 specular reflection
+		vec3f R = L - 2 * L.dot(N) * N;
+		vec3f V = -scene->getCamera()->getLook().normalize();
+		double RdV = clamp(R.dot(V));
+		if (RdV > 0)
+		{
+			Iphong += pow(RdV, shininess * 128) * Il.hadamard(ks);
+		}
+		// double specular = pow(coss, shininess*128);
+
 	}
 
-	return intensity;
+	return Iphong;
 }
