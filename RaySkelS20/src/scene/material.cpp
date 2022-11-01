@@ -37,11 +37,12 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 
 	// 6.5.3.1 ambient reflection
 	vec3f Ia = scene->getAmbientColor();
-	Iphong += Ia.hadamard(ka);
+	Iphong += prod(Ia, ka);
 
 	for (auto cliter = scene->beginLights(); cliter != scene->endLights(); ++cliter)
 	{
 		double dAtt = (*cliter)->distanceAttenuation(isectP);
+		dAtt = (dAtt < 1) ? dAtt : 1;
 		vec3f Il = (*cliter)->getColor(isectP); // Color doesn't depend on isectP
 
 		// 6.5.3.2 diffuse reflection
@@ -49,7 +50,7 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 		double NdL = N.dot(L);
 		if (NdL > 0)
 		{
-			Iphong += NdL * Il.hadamard(kd);
+			Iphong += NdL * prod(Il, kd) * dAtt;
 		}
 
 		// 6.5.3.3 specular reflection
@@ -59,7 +60,7 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 		double RdV = R.dot(V);
 		if (RdV > 0)
 		{
-			Iphong += pow(RdV, shininess * 128) * Il.hadamard(ks);
+			Iphong += pow(RdV, shininess * 128) * prod(Il, ks) * dAtt;
 		}
 		// double specular = pow(coss, shininess*128);
 
