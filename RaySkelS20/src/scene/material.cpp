@@ -54,7 +54,7 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 		}
 
 		// 6.5.3.3 specular reflection
-		vec3f R = (L - 2 * NdL * N).normalize();
+		vec3f R = -reflect(L, N).normalize();
 		vec3f V = -(scene->getCamera()->getLook().normalize());
 		// vec3f V = r.getDirection().normalize();
 		double RdV = R.dot(V);
@@ -63,8 +63,6 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 			Iphong += pow(RdV, shininess * 128) * prod(Il, ks) * dAtt;
 		}
 		// double specular = pow(coss, shininess*128);
-
 	}
-
 	return Iphong;
 }

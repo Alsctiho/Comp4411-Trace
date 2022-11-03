@@ -692,4 +692,9 @@ inline vec3f clamp( const vec3f& other )
 	return maximum( vec3f(), minimum( other, vec3f( 1.0, 1.0, 1.0 ) ) );
 }
 
+inline vec3f reflect(const vec3f& lightDir, const vec3f& N)
+{
+	return vec3f(2 * (lightDir.dot(N)) * N - lightDir);
+}
+
 #endif // __VECMATH_H__
