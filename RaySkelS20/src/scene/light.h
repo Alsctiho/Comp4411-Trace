@@ -38,15 +38,26 @@ class PointLight
 	: public Light
 {
 public:
-	PointLight( Scene *scene, const vec3f& pos, const vec3f& color )
-		: Light( scene, color ), position( pos ) {}
+	PointLight( Scene *scene, const vec3f& pos, const vec3f& color, 
+				const double& cAtt = 0, 
+				const double& lAtt = 0,
+				const double& qAtt = 0)
+		: Light( scene, color ), position( pos ), 
+		a( cAtt ),
+		b( lAtt ),
+		c( qAtt ) {}
 	virtual vec3f shadowAttenuation(const vec3f& P) const;
 	virtual double distanceAttenuation( const vec3f& P ) const;
 	virtual vec3f getColor( const vec3f& P ) const;
 	virtual vec3f getDirection( const vec3f& P ) const;
+	// void updateAttenuationCoeff( double& cAtt, double& lAtt, double& qAtt );
 
 protected:
 	vec3f position;
+	double a;
+	double b;
+	double c;
+
 };
 
 class AmbientLight: SceneElement

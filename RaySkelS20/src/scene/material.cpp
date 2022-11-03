@@ -42,7 +42,7 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 	for (auto cliter = scene->beginLights(); cliter != scene->endLights(); ++cliter)
 	{
 		double dAtt = (*cliter)->distanceAttenuation(isectP);
-		dAtt = (dAtt < 1) ? dAtt : 1;
+		// dAtt = (dAtt < 1) ? dAtt : 1;
 		vec3f Il = (*cliter)->getColor(isectP); // Color doesn't depend on isectP
 
 		// 6.5.3.2 diffuse reflection

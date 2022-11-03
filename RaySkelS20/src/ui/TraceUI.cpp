@@ -13,6 +13,7 @@
 #include "../RayTracer.h"
 
 static bool done;
+static bool AttChanged = false;
 
 //------------------------------------- Help Functions --------------------------------------------
 TraceUI* TraceUI::whoami(Fl_Menu_* o)	// from menu item back to UI itself
@@ -90,6 +91,24 @@ void TraceUI::cb_sizeSlides(Fl_Widget* o, void* v)
 void TraceUI::cb_depthSlides(Fl_Widget* o, void* v)
 {
 	((TraceUI*)(o->user_data()))->m_nDepth=int( ((Fl_Slider *)o)->value() ) ;
+}
+
+void TraceUI::cb_constAttSlides(Fl_Widget* o, void* v)
+{
+	AttChanged = true;
+	((TraceUI*)(o->user_data()))->m_nConstAtt = int(((Fl_Slider*)o)->value());
+}
+
+void TraceUI::cb_lineAttSlides(Fl_Widget* o, void* v)
+{
+	AttChanged = true;
+	((TraceUI*)(o->user_data()))->m_nLineAtt = int(((Fl_Slider*)o)->value());
+}
+
+void TraceUI::cb_quadAttSlides(Fl_Widget* o, void* v)
+{
+	AttChanged = true;
+	((TraceUI*)(o->user_data()))->m_nQuadAtt = int(((Fl_Slider*)o)->value());
 }
 
 void TraceUI::cb_render(Fl_Widget* o, void* v)
@@ -195,6 +214,21 @@ int TraceUI::getDepth()
 	return m_nDepth;
 }
 
+double TraceUI::getConstAtt()
+{
+	return m_nConstAtt;
+}
+
+double TraceUI::getLineAtt()
+{
+	return m_nLineAtt;
+}
+
+double TraceUI::getQuadAtt()
+{
+	return m_nQuadAtt;
+}
+
 // menu definition
 Fl_Menu_Item TraceUI::menuitems[] = {
 	{ "&File",		0, 0, 0, FL_SUBMENU },
@@ -214,10 +248,14 @@ TraceUI::TraceUI() {
 	// init.
 	m_nDepth = 0;
 	m_nSize = 150;
-	m_mainWindow = new Fl_Window(100, 40, 320, 100, "Ray <Not Loaded>");
+	m_nConstAtt = 0.25;
+	m_nLineAtt = 0.25;
+	m_nQuadAtt = 0.50;
+
+	m_mainWindow = new Fl_Window(100, 40, 350, 600, "Ray <Not Loaded>");
 		m_mainWindow->user_data((void*)(this));	// record self to be used by static callback functions
 		// install menu bar
-		m_menubar = new Fl_Menu_Bar(0, 0, 320, 25);
+		m_menubar = new Fl_Menu_Bar(0, 0, 350, 25);
 		m_menubar->menu(menuitems);
 
 		// install slider depth
@@ -246,11 +284,52 @@ TraceUI::TraceUI() {
 		m_sizeSlider->align(FL_ALIGN_RIGHT);
 		m_sizeSlider->callback(cb_sizeSlides);
 
-		m_renderButton = new Fl_Button(240, 27, 70, 25, "&Render");
+		// install attenuation constant slider
+		m_constAttSlider = new Fl_Value_Slider(10, 80, 180, 20, "Attenuation, Constant");
+		m_constAttSlider->user_data((void*)(this));
+		m_constAttSlider->type(FL_HOR_NICE_SLIDER);
+		m_constAttSlider->labelfont(FL_COURIER);
+		m_constAttSlider->labelsize(12);
+		m_constAttSlider->minimum(0.00);
+		m_constAttSlider->maximum(1.00);
+		m_constAttSlider->step(0.01);
+		m_constAttSlider->value(m_nConstAtt);
+		m_constAttSlider->align(FL_ALIGN_RIGHT);
+		m_constAttSlider->callback(cb_constAttSlides);
+
+		// install attenuation linear slider
+		m_lineAttSlider = new Fl_Value_Slider(10, 105, 180, 20, "Attenuation, Linear");
+		m_lineAttSlider->user_data((void*)(this));
+		m_lineAttSlider->type(FL_HOR_NICE_SLIDER);
+		m_lineAttSlider->labelfont(FL_COURIER);
+		m_lineAttSlider->labelsize(12);
+		m_lineAttSlider->minimum(0.00);
+		m_lineAttSlider->maximum(1.00);
+		m_lineAttSlider->step(0.01);
+		m_lineAttSlider->value(m_nLineAtt);
+		m_lineAttSlider->align(FL_ALIGN_RIGHT);
+		m_lineAttSlider->callback(cb_lineAttSlides);
+
+		// install attenuation quadric slider
+		m_quadAttSlider = new Fl_Value_Slider(10, 130, 180, 20, "Attenuation, Quadric");
+		m_quadAttSlider->user_data((void*)(this));
+		m_quadAttSlider->type(FL_HOR_NICE_SLIDER);
+		m_quadAttSlider->labelfont(FL_COURIER);
+		m_quadAttSlider->labelsize(12);
+		m_quadAttSlider->minimum(0.00);
+		m_quadAttSlider->maximum(1.00);
+		m_quadAttSlider->step(0.01);
+		m_quadAttSlider->value(m_nQuadAtt);
+		m_quadAttSlider->align(FL_ALIGN_RIGHT);
+		m_quadAttSlider->callback(cb_quadAttSlides);
+
+		// install render button
+		m_renderButton = new Fl_Button(270, 27, 70, 25, "&Render");
 		m_renderButton->user_data((void*)(this));
 		m_renderButton->callback(cb_render);
-
-		m_stopButton = new Fl_Button(240, 55, 70, 25, "&Stop");
+		
+		// install stop button
+		m_stopButton = new Fl_Button(270, 55, 70, 25, "&Stop");
 		m_stopButton->user_data((void*)(this));
 		m_stopButton->callback(cb_stop);
 
