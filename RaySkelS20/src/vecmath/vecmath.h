@@ -697,4 +697,9 @@ inline vec3f reflect(const vec3f& lightDir, const vec3f& N)
 	return vec3f(2 * (lightDir.dot(N)) * N - lightDir);
 }
 
+inline bool areSameDirection(vec3f v1, vec3f v2)
+{
+	return v1.dot(v2) > 0;
+}
+
 #endif // __VECMATH_H__

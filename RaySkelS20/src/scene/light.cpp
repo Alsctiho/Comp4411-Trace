@@ -50,8 +50,10 @@ double PointLight::distanceAttenuation( const vec3f& P ) const
 	// cout << P << endl;
 	const double d = (P - position).length();
 	double numerator =  a + b * d + c * d * d;
-	if (numerator == 0) return 1.0;
-	else if ( 1 / numerator < 1.0) return 1 / numerator;
+	if (numerator == 0) 
+		return 1.0;
+	else if ( 1 / numerator < 1.0) 
+		return 1 / numerator;
 	else {
 		/*
 		cout << "a: " << a << endl;
@@ -61,7 +63,6 @@ double PointLight::distanceAttenuation( const vec3f& P ) const
 		cout << "atten: " << 1 / numerator << endl;
 		cout << endl; */
 		return 1.0;
-		
 	}
 
 }
