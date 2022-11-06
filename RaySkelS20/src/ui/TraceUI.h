@@ -47,6 +47,7 @@ public:
 	double		getConstAtt();
 	double		getLineAtt();
 	double		getQuadAtt();
+	bool		AttenCoeffHasChanged();
 
 private:
 	RayTracer*	raytracer;
@@ -56,6 +57,7 @@ private:
 	double		m_nConstAtt;
 	double		m_nLineAtt;
 	double		m_nQuadAtt;
+	bool		AttenCoeffChanged = false;
 
 // static class members
 	static Fl_Menu_Item menuitems[];

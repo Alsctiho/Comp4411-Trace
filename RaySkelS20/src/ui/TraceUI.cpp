@@ -13,7 +13,7 @@
 #include "../RayTracer.h"
 
 static bool done;
-static bool AttChanged = false;
+
 
 //------------------------------------- Help Functions --------------------------------------------
 TraceUI* TraceUI::whoami(Fl_Menu_* o)	// from menu item back to UI itself
@@ -95,20 +95,20 @@ void TraceUI::cb_depthSlides(Fl_Widget* o, void* v)
 
 void TraceUI::cb_constAttSlides(Fl_Widget* o, void* v)
 {
-	AttChanged = true;
-	((TraceUI*)(o->user_data()))->m_nConstAtt = int(((Fl_Slider*)o)->value());
+	((TraceUI*)(o->user_data()))->m_nConstAtt = double(((Fl_Slider*)o)->value());
+	((TraceUI*)(o->user_data()))->AttenCoeffChanged = true;
 }
 
 void TraceUI::cb_lineAttSlides(Fl_Widget* o, void* v)
 {
-	AttChanged = true;
-	((TraceUI*)(o->user_data()))->m_nLineAtt = int(((Fl_Slider*)o)->value());
+	((TraceUI*)(o->user_data()))->m_nLineAtt = double(((Fl_Slider*)o)->value());
+	((TraceUI*)(o->user_data()))->AttenCoeffChanged = true;
 }
 
 void TraceUI::cb_quadAttSlides(Fl_Widget* o, void* v)
 {
-	AttChanged = true;
-	((TraceUI*)(o->user_data()))->m_nQuadAtt = int(((Fl_Slider*)o)->value());
+	((TraceUI*)(o->user_data()))->m_nQuadAtt = double(((Fl_Slider*)o)->value());
+	((TraceUI*)(o->user_data()))->AttenCoeffChanged = true;
 }
 
 void TraceUI::cb_render(Fl_Widget* o, void* v)
@@ -227,6 +227,11 @@ double TraceUI::getLineAtt()
 double TraceUI::getQuadAtt()
 {
 	return m_nQuadAtt;
+}
+
+bool TraceUI::AttenCoeffHasChanged()
+{
+	return AttenCoeffChanged;
 }
 
 // menu definition

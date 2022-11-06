@@ -2,6 +2,8 @@
 #define __LIGHT_H__
 
 #include "scene.h"
+#include "../ui/TraceUI.h"
+extern TraceUI* traceUI;
 
 class Light
 	: public SceneElement
