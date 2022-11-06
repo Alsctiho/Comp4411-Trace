@@ -30,7 +30,7 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 {
 	isect i;
 
-	if( scene->intersect( r, i ) && depth > 0 ) {
+	if( scene->intersect( r, i ) && depth >= 0 ) {
 		// YOUR CODE HERE
 
 		// An intersection occured!  We've got work to do.  For now,
@@ -50,7 +50,8 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		vec3f reflectedDir = reflect(r.getDirection(), i.N).normalize();
 		ray reflectedRay{ r.getIsecPosition(i.t), reflectedDir };
 
-		return result + m.kt.hadamard(traceRay(scene, reflectedRay, thresh, depth - 1));
+		result += prod(m.kr, (traceRay(scene, reflectedRay, thresh, depth - 1)));
+		return result;
 	
 	} else {
 		// No intersection.  This ray travels to infinity, so we color

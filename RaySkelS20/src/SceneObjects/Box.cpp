@@ -19,7 +19,7 @@ bool Box::intersectLocal( const ray& r, isect& i ) const
 	vec3f N{ 0.0, 0.0, 0.0 };
 	BoundingBox localBoundingBox = ComputeLocalBoundingBox();
 
-	/*
+	/*******
 	if (localBoundingBox.intersect(r, tMin, tMax))
 	{
 		i.obj = this;
@@ -28,7 +28,7 @@ bool Box::intersectLocal( const ray& r, isect& i ) const
 		return true;
 	}
 	else return false;
-	*/
+	************/
 	
 	for (int currentaxis = 0; currentaxis < 3; currentaxis++)
 	{
@@ -81,3 +81,4 @@ bool Box::intersectLocal( const ray& r, isect& i ) const
 
 	return true;
 }
+

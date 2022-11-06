@@ -32,7 +32,7 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 	// How can I get the light positions? ans: scene->beginLights() 
 
 	vec3f Iphong = ke;
-	vec3f isectP = r.getIsecPosition(i.t);
+	vec3f isectP = r.at(i.t);
 	vec3f N = i.N.normalize();
 
 	// 6.5.3.1 ambient reflection
@@ -41,7 +41,10 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 
 	for (auto cliter = scene->beginLights(); cliter != scene->endLights(); ++cliter)
 	{
+
 		double dAtt = (*cliter)->distanceAttenuation(isectP);
+		vec3f sAtt = (*cliter)->shadowAttenuation(isectP);
+		vec3f atten = dAtt * sAtt;
 		// dAtt = (dAtt < 1) ? dAtt : 1;
 		vec3f Il = (*cliter)->getColor(isectP); // Color doesn't depend on isectP
 
@@ -50,17 +53,17 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 		double NdL = N.dot(L);
 		if (NdL > 0)
 		{
-			Iphong += NdL * prod(Il, kd) * dAtt;
+			Iphong += prod(NdL * prod(Il, kd), atten);
 		}
 
 		// 6.5.3.3 specular reflection
 		vec3f R = -reflect(L, N).normalize();
-		vec3f V = -(scene->getCamera()->getLook().normalize());
+		vec3f V = -r.getDirection();
 		// vec3f V = r.getDirection().normalize();
 		double RdV = R.dot(V);
 		if (RdV > 0)
 		{
-			Iphong += pow(RdV, shininess * 128) * prod(Il, ks) * dAtt;
+			Iphong += prod(pow(RdV, shininess * 128) * prod(Il, ks), atten);
 		}
 		// double specular = pow(coss, shininess*128);
 	}
