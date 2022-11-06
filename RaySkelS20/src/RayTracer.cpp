@@ -46,14 +46,11 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		
 		vec3f result = m.shade(scene, r, i);
 
-		if (areSameDirection(-r.getDirection(), i.N))
-		{
-			// Reflection
-			vec3f reflectedDir = reflect(-r.getDirection(), i.N).normalize();
-			ray reflectedRay{ r.getIsecPosition(i.t), reflectedDir };
+		vec3f reflectedDir = reflect(-r.getDirection(), i.N).normalize();
+		ray reflectedRay{ r.getIsecPosition(i.t) + reflectedDir * RAY_EPSILON, reflectedDir };
 
-			result += prod(m.kr, (traceRay(scene, reflectedRay, thresh, depth - 1)));
-		}
+		result += prod(m.kr, (traceRay(scene, reflectedRay, thresh, depth - 1)));
+
 
 		return result;
 	
