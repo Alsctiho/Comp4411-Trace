@@ -1,6 +1,7 @@
 // The main ray tracer.
 
 #include <Fl/fl_ask.h>
+#include <iostream>
 
 #include "RayTracer.h"
 #include "scene/light.h"
@@ -20,7 +21,7 @@ vec3f RayTracer::trace( Scene *scene, double x, double y )
 {
     ray r( vec3f(0,0,0), vec3f(0,0,0) );
     scene->getCamera()->rayThrough( x,y,r );
-	return traceRay( scene, r, vec3f(1.0,1.0,1.0), traceUI->getDepth()).clamp();
+	return traceRay( scene, r, traceUI->getThresh(), traceUI->getDepth()).clamp();
 }
 
 // Do recursive ray tracing!  You'll want to insert a lot of code here
@@ -46,10 +47,13 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		
 		vec3f result = m.shade(scene, r, i);
 
+		if (result < thresh)  return result; // adaptive termination based on thresh
+
 		vec3f reflectedDir = reflect(-r.getDirection(), i.N).normalize();
 		ray reflectedRay{ r.getIsecPosition(i.t) + reflectedDir * RAY_EPSILON, reflectedDir };
 
-		result += prod(m.kr, (traceRay(scene, reflectedRay, thresh, depth - 1)));
+		
+		result += prod(m.kr, (traceRay(scene, reflectedRay, prod(thresh, m.kr), depth - 1)));
 
 
 		return result;

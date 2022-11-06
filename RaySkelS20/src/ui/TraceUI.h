@@ -31,6 +31,7 @@ public:
 	Fl_Slider*			m_constAttSlider;
 	Fl_Slider*			m_lineAttSlider;
 	Fl_Slider*			m_quadAttSlider;
+	Fl_Slider*			m_thresh;
 
 	Fl_Button*			m_renderButton;
 	Fl_Button*			m_stopButton;
@@ -49,6 +50,8 @@ public:
 	double		getQuadAtt();
 	bool		AttenCoeffHasChanged();
 
+	vec3f		getThresh();
+
 private:
 	RayTracer*	raytracer;
 
@@ -57,6 +60,7 @@ private:
 	double		m_nConstAtt;
 	double		m_nLineAtt;
 	double		m_nQuadAtt;
+	double		m_nThresh;
 	bool		AttenCoeffChanged = false;
 
 // static class members
@@ -76,6 +80,7 @@ private:
 	static void cb_constAttSlides(Fl_Widget* o, void* v);
 	static void cb_lineAttSlides(Fl_Widget* o, void* v);
 	static void cb_quadAttSlides(Fl_Widget* o, void* v);
+	static void cb_threshSlides(Fl_Widget* o, void* v);
 
 	static void cb_render(Fl_Widget* o, void* v);
 	static void cb_stop(Fl_Widget* o, void* v);
