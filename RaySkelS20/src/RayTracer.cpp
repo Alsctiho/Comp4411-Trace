@@ -45,18 +45,50 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 
 		const Material& m = i.getMaterial();
 		
-		vec3f result = m.shade(scene, r, i);
+		vec3f phong = m.shade(scene, r, i);
 
-		if (result < thresh)  return result; // adaptive termination based on thresh
+		vec3f incident = r.getDirection().normalize();
+		vec3f normal = i.N.normalize();
+		vec3f isecPos = r.getIsecPosition(i.t);
 
-		vec3f reflectedDir = reflect(-r.getDirection(), i.N).normalize();
-		ray reflectedRay{ r.getIsecPosition(i.t) + reflectedDir * RAY_EPSILON, reflectedDir };
+		vec3f kr = (m.kr == vec3f(0.0f, 0.0f, 0.0f)) ? m.ks : m.kr;
+		vec3f reflection, refraction;
+
+		//if (phong < thresh)  return phong; // adaptive termination based on thresh
+
+		normal = (isInsideGeometry(incident, normal)) ? -normal : normal;
+
+		// Reflection
+		vec3f reflectedDir = reflect(-incident, normal).normalize();
+		ray reflectedRay{ isecPos + reflectedDir * RAY_EPSILON, reflectedDir };
+		reflection = prod(kr, (traceRay(scene, reflectedRay, thresh, depth - 1)));
+
+		if (m.index == 1.0 && m.kt == vec3f(0.0, 0.0, 0.0))
+			return phong + reflection;
+		
+		// Refraction
+		// Step 1: Find refractive direction
+		vec3f refractiveDir;
+		// Step 2: Internal refraction -> inside and outside.
+		if (isInsideGeometry(incident, normal))
+		{
+			refractiveDir = refract(incident, normal, m.index, 1.0f);
+		}
+		else
+		{
+			refractiveDir = refract(incident, normal, 1.0f, m.index);
+		}
 
 		
-		result += prod(m.kr, (traceRay(scene, reflectedRay, prod(thresh, m.kr), depth - 1)));
+		if (refractiveDir == vec3f(0.0, 0.0, 0.0))
+			return phong + reflection;
 
+		// Step 3: Ray
+		ray refractiveRay{ isecPos + refractiveDir * RAY_EPSILON, refractiveDir };
+		refraction = prod(m.kt, traceRay(scene, refractiveRay, thresh, depth - 1));
 
-		return result;
+		return prod(vec3f(1.f, 1.f, 1.f) - m.kt, phong + reflection) + refraction;
+
 	
 	} else {
 		// No intersection.  This ray travels to infinity, so we color
@@ -65,6 +97,22 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 
 		return vec3f( 0.0, 0.0, 0.0 );
 	}
+}
+
+vec3f RayTracer::insideTraceRay(
+	Scene* scene, const ray& r, const vec3f& thresh, int depth,
+	const isect& i, const Material& m,
+	const vec3f& incident, const vec3f& normal, vec3f& result)
+{
+	return vec3f(0.0, 0.0, 0.0);
+}
+
+vec3f RayTracer::outsideTraceRay(
+	Scene* scene, const ray& r, const vec3f& thresh, int depth, 
+	const isect& i, const Material& m, 
+	const vec3f& incident, const vec3f& normal, vec3f& result)
+{
+	return vec3f(0.0, 0.0, 0.0);
 }
 
 RayTracer::RayTracer()

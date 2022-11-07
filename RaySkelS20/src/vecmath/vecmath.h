@@ -703,9 +703,20 @@ inline vec3f reflect(const vec3f& lightDir, const vec3f& N)
 	return vec3f(2 * (lightDir.dot(N)) * N - lightDir);
 }
 
-inline bool areSameDirection(vec3f v1, vec3f v2)
+inline bool isInsideGeometry(vec3f v1, vec3f v2)
 {
 	return v1.dot(v2) > 0;
+}
+
+inline vec3f refract(const vec3f& incident, const vec3f& normal, float n1, float n2)
+{
+	float eta = n2 / n1;
+	float N_dot_I = normal.dot(incident);
+	float k = 1.f - eta * eta * (1.f - N_dot_I * N_dot_I);
+	if (k < 0.f)
+		return vec3f(0.f, 0.f, 0.f);
+	else
+		return eta * incident - ((double)eta * N_dot_I + sqrtf(k)) * normal;
 }
 
 #endif // __VECMATH_H__
