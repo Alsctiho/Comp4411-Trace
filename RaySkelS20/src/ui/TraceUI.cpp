@@ -116,6 +116,13 @@ void TraceUI::cb_threshSlides(Fl_Widget* o, void* v)
 	((TraceUI*)(o->user_data()))->m_nThresh = double(((Fl_Slider*)o)->value());
 }
 
+void TraceUI::cb_testLightButton(Fl_Widget* o, void* v)
+{
+	if (int(((Fl_Button*)o)->value()))
+		std::cout << 1 << endl;
+	else std::cout << 0 << endl;
+}
+
 void TraceUI::cb_render(Fl_Widget* o, void* v)
 {
 	char buffer[256];
@@ -350,6 +357,11 @@ TraceUI::TraceUI() {
 		m_thresh->value(0.0);
 		m_thresh->align(FL_ALIGN_RIGHT);
 		m_thresh->callback(cb_threshSlides);
+
+		// install a light button
+		m_Testing = new Fl_Light_Button(10, 180, 60, 25, "Test");
+		m_Testing->user_data((void*)(this));
+		m_Testing->callback(cb_testLightButton);
 
 		// install render button
 		m_renderButton = new Fl_Button(270, 27, 70, 25, "&Render");
