@@ -42,7 +42,7 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 	for (auto cliter = scene->beginLights(); cliter != scene->endLights(); ++cliter)
 	{
 
-		double dAtt = (*cliter)->distanceAttenuation(isectP);
+		double dAtt = (*cliter)->distanceAttenuation (isectP);
 		vec3f sAtt = (*cliter)->shadowAttenuation(isectP);
 		vec3f atten = dAtt * sAtt;
 		// dAtt = (dAtt < 1) ? dAtt : 1;
