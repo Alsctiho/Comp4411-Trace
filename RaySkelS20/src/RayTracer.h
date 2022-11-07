@@ -5,6 +5,7 @@
 
 #include "scene/scene.h"
 #include "scene/ray.h"
+#include <stack>
 
 class RayTracer
 {
@@ -14,15 +15,6 @@ public:
 
     vec3f trace( Scene *scene, double x, double y );
 	vec3f traceRay( Scene *scene, const ray& r, const vec3f& thresh, int depth );
-	vec3f insideTraceRay(
-		Scene* scene, const ray& r, const vec3f& thresh, int depth,
-		const isect& i, const Material& m,
-		const vec3f& incident, const vec3f& normal, vec3f& result);
-	vec3f outsideTraceRay(
-		Scene* scene, const ray& r, const vec3f& thresh, int depth,
-		const isect& i, const Material& m,
-		const vec3f& incident, const vec3f& normal, vec3f& result);
-
 
 	void getBuffer( unsigned char *&buf, int &w, int &h );
 	double aspectRatio();
@@ -41,6 +33,7 @@ private:
 	Scene *scene;
 
 	bool m_bSceneLoaded;
+	stack<const Material*> materials;
 };
 
 #endif // __RAYTRACER_H__

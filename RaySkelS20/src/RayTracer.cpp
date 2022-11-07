@@ -43,20 +43,17 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		// more steps: add in the contributions from reflected and refracted
 		// rays.
 
-		const Material& m = i.getMaterial();
-		
-		vec3f phong = m.shade(scene, r, i);
-
-		vec3f incident = r.getDirection().normalize();
 		vec3f normal = i.N.normalize();
-		vec3f isecPos = r.getIsecPosition(i.t);
+		const Material& m = i.getMaterial();
+		const vec3f& incident = r.getDirection().normalize();
+		const vec3f& isecPos = r.getIsecPosition(i.t);
+		vec3f phong, reflection, refraction;
 
-		// vec3f kr = (m.kr == vec3f(0.0f, 0.0f, 0.0f)) ? m.ks : m.kr;
-		vec3f reflection, refraction;
+		bool inside = isInsideGeometry(incident, normal);
 
-		if (phong < thresh)  return phong; // adaptive termination based on thresh
-
-		normal = (isInsideGeometry(incident, normal)) ? -normal : normal;
+		phong = m.shade(scene, r, i);
+		//if (phong < thresh)  return phong; // adaptive termination based on thresh
+		normal = (inside) ? -normal : normal;
 
 		// Reflection
 		vec3f reflectedDir = reflect(-incident, normal).normalize();
@@ -70,12 +67,21 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		// Step 1: Find refractive direction
 		vec3f refractiveDir;
 		// Step 2: Internal refraction -> inside and outside.
-		if (isInsideGeometry(incident, normal))
+		if (inside)
 		{
+			//const Material* insideMaterial = materials.top();
+			//materials.pop();
+			//const Material* outsideMaterial = materials.top();
+			//refractiveDir = refract(-incident, normal, insideMaterial->index, outsideMaterial->index);
 			refractiveDir = refract(-incident, normal, m.index, 1.0).normalize();
 		}
 		else
 		{
+			// should be vacuum for the first recursion.
+			//const Material* outsideMaterial = materials.top();
+			//const Material* insideMaterial = &m;
+			//materials.push(insideMaterial);
+			//refractiveDir = refract(-incident, normal, outsideMaterial->index, insideMaterial->index);
 			refractiveDir = refract(-incident, normal, 1.0, m.index).normalize();
 		}
 
@@ -99,22 +105,6 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 	}
 }
 
-vec3f RayTracer::insideTraceRay(
-	Scene* scene, const ray& r, const vec3f& thresh, int depth,
-	const isect& i, const Material& m,
-	const vec3f& incident, const vec3f& normal, vec3f& result)
-{
-	return vec3f(0.0, 0.0, 0.0);
-}
-
-vec3f RayTracer::outsideTraceRay(
-	Scene* scene, const ray& r, const vec3f& thresh, int depth, 
-	const isect& i, const Material& m, 
-	const vec3f& incident, const vec3f& normal, vec3f& result)
-{
-	return vec3f(0.0, 0.0, 0.0);
-}
-
 RayTracer::RayTracer()
 {
 	buffer = NULL;
@@ -122,6 +112,9 @@ RayTracer::RayTracer()
 	scene = NULL;
 
 	m_bSceneLoaded = false;
+
+	// The first material is vacuum
+	materials.push(new Material());
 }
 
 
@@ -129,6 +122,8 @@ RayTracer::~RayTracer()
 {
 	delete [] buffer;
 	delete scene;
+
+	delete materials.top();
 }
 
 void RayTracer::getBuffer( unsigned char *&buf, int &w, int &h )
