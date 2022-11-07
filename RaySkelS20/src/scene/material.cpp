@@ -37,7 +37,8 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 
 	// 6.5.3.1 ambient reflection
 	vec3f Ia = scene->getAmbientColor();
-	Iphong += prod(Ia, ka);
+	// Iphong += prod(Ia, ka);
+	Iphong += prod(prod(Ia, ka), vec3f(1.0, 1.0, 1.0) - kt);
 
 	for (auto cliter = scene->beginLights(); cliter != scene->endLights(); ++cliter)
 	{
@@ -53,7 +54,8 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 		double NdL = N.dot(L);
 		if (NdL > 0)
 		{
-			Iphong += prod(NdL * prod(Il, kd), atten);
+			// Iphong += prod(NdL * prod(Il, kd), atten);
+			Iphong += prod(prod(NdL * prod(Il, kd), atten), vec3f(1.0, 1.0, 1.0) - kt);
 		}
 
 		// 6.5.3.3 specular reflection

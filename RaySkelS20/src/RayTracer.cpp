@@ -51,17 +51,17 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		vec3f normal = i.N.normalize();
 		vec3f isecPos = r.getIsecPosition(i.t);
 
-		vec3f kr = (m.kr == vec3f(0.0f, 0.0f, 0.0f)) ? m.ks : m.kr;
+		// vec3f kr = (m.kr == vec3f(0.0f, 0.0f, 0.0f)) ? m.ks : m.kr;
 		vec3f reflection, refraction;
 
-		//if (phong < thresh)  return phong; // adaptive termination based on thresh
+		if (phong < thresh)  return phong; // adaptive termination based on thresh
 
 		normal = (isInsideGeometry(incident, normal)) ? -normal : normal;
 
 		// Reflection
 		vec3f reflectedDir = reflect(-incident, normal).normalize();
 		ray reflectedRay{ isecPos + reflectedDir * RAY_EPSILON, reflectedDir };
-		reflection = prod(kr, (traceRay(scene, reflectedRay, thresh, depth - 1)));
+		reflection = prod(m.kr, (traceRay(scene, reflectedRay, thresh, depth - 1)));
 
 		if (m.index == 1.0 && m.kt == vec3f(0.0, 0.0, 0.0))
 			return phong + reflection;
@@ -72,22 +72,22 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		// Step 2: Internal refraction -> inside and outside.
 		if (isInsideGeometry(incident, normal))
 		{
-			refractiveDir = refract(incident, normal, m.index, 1.0f);
+			refractiveDir = refract(-incident, normal, m.index, 1.0).normalize();
 		}
 		else
 		{
-			refractiveDir = refract(incident, normal, 1.0f, m.index);
+			refractiveDir = refract(-incident, normal, 1.0, m.index).normalize();
 		}
 
 		
-		if (refractiveDir == vec3f(0.0, 0.0, 0.0))
+		if (refractiveDir == vec3f(0.0, 0.0, 0.0)) // handles tir
 			return phong + reflection;
 
 		// Step 3: Ray
 		ray refractiveRay{ isecPos + refractiveDir * RAY_EPSILON, refractiveDir };
 		refraction = prod(m.kt, traceRay(scene, refractiveRay, thresh, depth - 1));
 
-		return prod(vec3f(1.f, 1.f, 1.f) - m.kt, phong + reflection) + refraction;
+		return phong + reflection + refraction;
 
 	
 	} else {

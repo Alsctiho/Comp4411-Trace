@@ -708,15 +708,15 @@ inline bool isInsideGeometry(vec3f v1, vec3f v2)
 	return v1.dot(v2) > 0;
 }
 
-inline vec3f refract(const vec3f& incident, const vec3f& normal, float n1, float n2)
+inline vec3f refract(const vec3f& incident, const vec3f& normal, double n1, double n2)
 {
-	float eta = n2 / n1;
-	float N_dot_I = normal.dot(incident);
-	float k = 1.f - eta * eta * (1.f - N_dot_I * N_dot_I);
-	if (k < 0.f)
-		return vec3f(0.f, 0.f, 0.f);
+	double eta = n1 / n2;
+	double N_dot_I = normal.dot(incident);
+	double k = 1.0 - eta * eta * (1.0 - N_dot_I * N_dot_I);
+	if (k < 0.0)
+		return vec3f(0.0, 0.0, 0.0);
 	else
-		return eta * incident - ((double)eta * N_dot_I + sqrtf(k)) * normal;
+		return (eta * N_dot_I - sqrtf(k)) * normal - eta * incident;
 }
 
 #endif // __VECMATH_H__
