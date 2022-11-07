@@ -52,15 +52,9 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		vec3f isecPos = r.getIsecPosition(i.t);
 
 		vec3f kr = (m.kr == vec3f(0.0f, 0.0f, 0.0f)) ? m.ks : m.kr;
-		if (result < thresh)  return result; // adaptive termination based on thresh
-
-		vec3f reflectedDir = reflect(-r.getDirection(), i.N).normalize();
-		ray reflectedRay{ r.getIsecPosition(i.t) + reflectedDir * RAY_EPSILON, reflectedDir };
-
-		
-		result += prod(m.kr, (traceRay(scene, reflectedRay, prod(thresh, m.kr), depth - 1)));
-
 		vec3f reflection, refraction;
+
+		//if (phong < thresh)  return phong; // adaptive termination based on thresh
 
 		normal = (isInsideGeometry(incident, normal)) ? -normal : normal;
 
