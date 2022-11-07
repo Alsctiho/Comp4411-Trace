@@ -355,6 +355,12 @@ inline vec3f operator -(const vec3f& a, const vec3f& b)
 	return vec3f( a.n[0] - b.n[0], a.n[1] - b.n[1], a.n[2] - b.n[2] );
 }
 
+// self added
+inline bool operator <(const vec3f& a, const vec3f& b)
+{
+	return (a.n[0] < b.n[0] && a.n[1] < b.n[1] && a.n[2] < b.n[2]);
+}
+
 inline vec3f operator *(const vec3f& a, const double d )
 {
 	return vec3f( a.n[0] * d, a.n[1] * d, a.n[2] * d );

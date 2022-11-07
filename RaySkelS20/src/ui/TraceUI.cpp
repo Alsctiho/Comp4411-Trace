@@ -111,6 +111,11 @@ void TraceUI::cb_quadAttSlides(Fl_Widget* o, void* v)
 	((TraceUI*)(o->user_data()))->AttenCoeffChanged = true;
 }
 
+void TraceUI::cb_threshSlides(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->m_nThresh = double(((Fl_Slider*)o)->value());
+}
+
 void TraceUI::cb_render(Fl_Widget* o, void* v)
 {
 	char buffer[256];
@@ -229,6 +234,11 @@ double TraceUI::getQuadAtt()
 	return m_nQuadAtt;
 }
 
+vec3f TraceUI::getThresh()
+{
+	return vec3f(m_nThresh, m_nThresh, m_nThresh);
+}
+
 bool TraceUI::AttenCoeffHasChanged()
 {
 	return AttenCoeffChanged;
@@ -327,6 +337,19 @@ TraceUI::TraceUI() {
 		m_quadAttSlider->value(m_nQuadAtt);
 		m_quadAttSlider->align(FL_ALIGN_RIGHT);
 		m_quadAttSlider->callback(cb_quadAttSlides);
+
+		// install thresh slider
+		m_thresh = new Fl_Value_Slider(10, 155, 180, 20, "Threshold");
+		m_thresh->user_data((void*)(this));
+		m_thresh->type(FL_HOR_NICE_SLIDER);
+		m_thresh->labelfont(FL_COURIER);
+		m_thresh->labelsize(12);
+		m_thresh->minimum(0.00);
+		m_thresh->maximum(1.00);
+		m_thresh->step(0.01);
+		m_thresh->value(0.0);
+		m_thresh->align(FL_ALIGN_RIGHT);
+		m_thresh->callback(cb_threshSlides);
 
 		// install render button
 		m_renderButton = new Fl_Button(270, 27, 70, 25, "&Render");

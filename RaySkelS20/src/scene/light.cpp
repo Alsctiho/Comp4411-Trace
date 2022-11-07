@@ -1,5 +1,4 @@
 #include <cmath>
-#include <iostream>
 
 #include "light.h"
 #include "ray.h"
