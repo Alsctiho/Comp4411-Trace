@@ -42,7 +42,13 @@ Camera::rayThroughAntialising(int i, int j, int range, vector<ray>& rays, int bu
     {
         for (int jj = 0; jj < range; ++jj)
         {
-            vec3f dir = look + base + offsetX * ii + offsetY * jj;
+            // jittering the sub-pixel
+            double randX = (double)(rand() % 100) / 100.0;
+            double randY = (double)(rand() % 100) / 100.0;
+            vec3f noiseX = randX * offsetX;
+            vec3f noiseY = randY * offsetY;
+
+            vec3f dir = look + base + offsetX * ii + offsetY * jj + noiseX + noiseY;
             rays.push_back(ray(eye, dir.normalize()));
         }
     }

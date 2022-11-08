@@ -41,7 +41,7 @@ vec3f RayTracer::trace( Scene *scene, int i, int j, int buffer_width, int buffer
 		for(ray r : rays)
 			result += traceRay(scene, r, traceUI->getThresh(), traceUI->getDepth()).clamp();
 
-		result /= range * range;
+		result /= rays.size();
 	}
 
 	return result;

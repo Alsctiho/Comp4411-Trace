@@ -8,6 +8,7 @@
 #include <cmath>
 #include <algorithm>
 #include <vector>
+#include <cstdlib>
 
 using namespace std;
 
