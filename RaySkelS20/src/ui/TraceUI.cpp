@@ -116,6 +116,11 @@ void TraceUI::cb_threshSlides(Fl_Widget* o, void* v)
 	((TraceUI*)(o->user_data()))->m_nThresh = double(((Fl_Slider*)o)->value());
 }
 
+void TraceUI::cb_antialiasingSlides(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->m_nAntialiasing = int(((Fl_Slider*)o)->value());
+}
+
 void TraceUI::cb_testLightButton(Fl_Widget* o, void* v)
 {
 	if (int(((Fl_Button*)o)->value()))
@@ -246,6 +251,11 @@ vec3f TraceUI::getThresh()
 	return vec3f(m_nThresh, m_nThresh, m_nThresh);
 }
 
+int TraceUI::getAntialiasing()
+{
+	return m_nAntialiasing;
+}
+
 bool TraceUI::AttenCoeffHasChanged()
 {
 	return AttenCoeffChanged;
@@ -273,6 +283,7 @@ TraceUI::TraceUI() {
 	m_nConstAtt = 0.25;
 	m_nLineAtt = 0.25;
 	m_nQuadAtt = 0.50;
+	m_nAntialiasing = 0;
 
 	m_mainWindow = new Fl_Window(100, 40, 350, 600, "Ray <Not Loaded>");
 		m_mainWindow->user_data((void*)(this));	// record self to be used by static callback functions
@@ -358,8 +369,21 @@ TraceUI::TraceUI() {
 		m_thresh->align(FL_ALIGN_RIGHT);
 		m_thresh->callback(cb_threshSlides);
 
+		// install antialiasing slider
+		m_antialiasing = new Fl_Value_Slider(10, 180, 180, 20, "Antialiasing");
+		m_antialiasing->user_data((void*)(this));
+		m_antialiasing->type(FL_HOR_NICE_SLIDER);
+		m_antialiasing->labelfont(FL_COURIER);
+		m_antialiasing->labelsize(12);
+		m_antialiasing->minimum(0);
+		m_antialiasing->maximum(5);
+		m_antialiasing->step(1);
+		m_antialiasing->value(0.0);
+		m_antialiasing->align(FL_ALIGN_RIGHT);
+		m_antialiasing->callback(cb_antialiasingSlides);
+
 		// install a light button
-		m_Testing = new Fl_Light_Button(10, 180, 60, 25, "Test");
+		m_Testing = new Fl_Light_Button(10, 205, 60, 25, "Test");
 		m_Testing->user_data((void*)(this));
 		m_Testing->callback(cb_testLightButton);
 

@@ -8,6 +8,9 @@ class Camera
 public:
     Camera();
     void rayThrough( double x, double y, ray &r );
+
+    void rayThroughAntialising(int x, int y, int range, vector<ray>& r, int buffer_width, int buffer_height);
+
     void setEye( const vec3f &eye );
     void setLook( double, double, double, double );
     void setLook( const vec3f &viewDir, const vec3f &upDir );
@@ -23,9 +26,9 @@ private:
     
     void update();              // using the above three values calculate look,u,v
     
-    vec3f eye;
+    vec3f eye;                   // camera position
     vec3f look;                  // direction to look
-    vec3f u,v;                   // u and v in the 
+    vec3f u,v;                   // some unit vectors in the width(u) and height(v)
 };
 
 #endif

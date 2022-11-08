@@ -25,6 +25,29 @@ Camera::rayThrough( double x, double y, ray &r )
     r = ray( eye, dir.normalize() );
 }
 
+void 
+Camera::rayThroughAntialising(int i, int j, int range, vector<ray>& rays, int buffer_width, int buffer_height)
+{
+    double x = (double)i / (double)buffer_width;
+    double y = (double)j / (double)buffer_height;
+
+    x -= 0.5;
+    y -= 0.5;
+
+    vec3f base = x * u + y * v;
+    vec3f offsetX = (1.0 / (double)buffer_width) / (double) range * u;
+    vec3f offsetY = (1.0 / (double)buffer_height) / (double) range * v;
+
+    for (int ii = 0; ii < range; ++ii)
+    {
+        for (int jj = 0; jj < range; ++jj)
+        {
+            vec3f dir = look + base + offsetX * ii + offsetY * jj;
+            rays.push_back(ray(eye, dir.normalize()));
+        }
+    }
+}
+
 void
 Camera::setEye( const vec3f &eye )
 {
@@ -77,7 +100,7 @@ Camera::setFOV( double fov )
 
 void
 Camera::setAspectRatio( double ar )
-// ar - ratio of width to height
+// ar - ratio of width to height (width : height = ar : 1)
 {
     aspectRatio = ar;
     update();
@@ -86,8 +109,8 @@ Camera::setAspectRatio( double ar )
 void
 Camera::update()
 {
-    u = m * vec3f( 1,0,0 ) * normalizedHeight*aspectRatio;
-    v = m * vec3f( 0,1,0 ) * normalizedHeight;
+    u = m * vec3f( 1,0,0 ) * normalizedHeight*aspectRatio; // width
+    v = m * vec3f( 0,1,0 ) * normalizedHeight; // height
     look = m * vec3f( 0,0,-1 );
 }
 

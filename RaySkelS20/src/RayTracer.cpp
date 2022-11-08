@@ -17,11 +17,34 @@ extern TraceUI* traceUI;
 // through the projection plane, and out into the scene.  All we do is
 // enter the main ray-tracing method, getting things started by plugging
 // in an initial ray weight of (0.0,0.0,0.0) and an initial recursion depth of 0.
-vec3f RayTracer::trace( Scene *scene, double x, double y )
+vec3f RayTracer::trace( Scene *scene, int i, int j, int buffer_width, int buffer_height)
 {
-    ray r( vec3f(0,0,0), vec3f(0,0,0) );
-    scene->getCamera()->rayThrough( x,y,r );
-	return traceRay( scene, r, traceUI->getThresh(), traceUI->getDepth()).clamp();
+	vec3f result;
+
+	if (traceUI->getAntialiasing() == 0)
+	{
+		// x, y belongs to [0, 1)
+		double x = double(i) / double(buffer_width);
+		double y = double(j) / double(buffer_height);
+
+		ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+
+		scene->getCamera()->rayThrough(x, y, r);
+		result = traceRay(scene, r, traceUI->getThresh(), traceUI->getDepth()).clamp();
+	}
+	else
+	{
+		int range = traceUI->getAntialiasing();
+		vector<ray> rays;
+		scene->getCamera()->rayThroughAntialising(i, j, range, rays, buffer_width, buffer_height);
+
+		for(ray r : rays)
+			result += traceRay(scene, r, traceUI->getThresh(), traceUI->getDepth()).clamp();
+
+		result /= range * range;
+	}
+
+	return result;
 }
 
 // Do recursive ray tracing!  You'll want to insert a lot of code here
@@ -209,10 +232,9 @@ void RayTracer::tracePixel( int i, int j )
 	if( !scene )
 		return;
 
-	double x = double(i)/double(buffer_width);
-	double y = double(j)/double(buffer_height);
 
-	col = trace( scene,x,y );
+
+	col = trace( scene, i, j, buffer_width, buffer_height);
 
 	unsigned char *pixel = buffer + ( i + j * buffer_width ) * 3;
 

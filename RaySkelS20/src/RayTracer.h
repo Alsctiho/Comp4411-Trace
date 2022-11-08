@@ -13,7 +13,7 @@ public:
     RayTracer();
     ~RayTracer();
 
-    vec3f trace( Scene *scene, double x, double y );
+    vec3f trace( Scene *scene, int x, int y, int buffer_width, int buffer_height);
 	vec3f traceRay( Scene *scene, const ray& r, const vec3f& thresh, int depth );
 
 	void getBuffer( unsigned char *&buf, int &w, int &h );
@@ -34,6 +34,8 @@ private:
 
 	bool m_bSceneLoaded;
 	stack<const Material*> materials;
+
+	friend class Camera;
 };
 
 #endif // __RAYTRACER_H__

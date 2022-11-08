@@ -32,6 +32,8 @@ public:
 	Fl_Slider*			m_lineAttSlider;
 	Fl_Slider*			m_quadAttSlider;
 	Fl_Slider*			m_thresh;
+	Fl_Slider*			m_antialiasing;
+
 	Fl_Light_Button*	m_Testing;
 	Fl_Button*			m_renderButton;
 	Fl_Button*			m_stopButton;
@@ -51,6 +53,7 @@ public:
 	bool		AttenCoeffHasChanged();
 
 	vec3f		getThresh();
+	int			getAntialiasing();
 
 private:
 	RayTracer*	raytracer;
@@ -61,6 +64,7 @@ private:
 	double		m_nLineAtt;
 	double		m_nQuadAtt;
 	double		m_nThresh;
+	int			m_nAntialiasing;
 	bool		AttenCoeffChanged = false;
 
 // static class members
@@ -81,6 +85,8 @@ private:
 	static void cb_lineAttSlides(Fl_Widget* o, void* v);
 	static void cb_quadAttSlides(Fl_Widget* o, void* v);
 	static void cb_threshSlides(Fl_Widget* o, void* v);
+	static void cb_antialiasingSlides(Fl_Widget* o, void* v);
+
 	static void cb_testLightButton(Fl_Widget* o, void* v);
 
 	static void cb_render(Fl_Widget* o, void* v);
