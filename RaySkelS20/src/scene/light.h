@@ -13,6 +13,7 @@ public:
 	virtual double distanceAttenuation( const vec3f& P ) const = 0;
 	virtual vec3f getColor( const vec3f& P ) const = 0;
 	virtual vec3f getDirection( const vec3f& P ) const = 0;
+	virtual vec3f getPosition() const = 0;
 	virtual bool availableForLighting( const vec3f& d ) const = 0;
 
 protected:
@@ -32,6 +33,7 @@ public:
 	virtual double distanceAttenuation( const vec3f& P ) const;
 	virtual vec3f getColor( const vec3f& P ) const;
 	virtual vec3f getDirection( const vec3f& P ) const;
+	virtual vec3f getPosition() const;
 	virtual bool availableForLighting(const vec3f& d) const;
 
 protected:
@@ -48,6 +50,7 @@ public:
 	virtual double distanceAttenuation( const vec3f& P ) const;
 	virtual vec3f getColor( const vec3f& P ) const;
 	virtual vec3f getDirection( const vec3f& P ) const;
+	virtual vec3f getPosition() const;
 	virtual bool availableForLighting(const vec3f& d) const;
 	void setCAtt(double a) { this->a = a; }
 	void setLAtt(double b) { this->b = b; }

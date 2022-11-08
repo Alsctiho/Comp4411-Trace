@@ -38,6 +38,11 @@ vec3f DirectionalLight::getDirection( const vec3f& P ) const
 	return -orientation;
 }
 
+vec3f DirectionalLight::getPosition() const
+{
+	return vec3f();
+}
+
 bool DirectionalLight::availableForLighting(const vec3f& d) const
 {
 	return true;
@@ -78,6 +83,11 @@ vec3f PointLight::getDirection( const vec3f& P ) const
 	return (position - P).normalize();
 }
 
+vec3f PointLight::getPosition() const
+{
+	return position;
+}
+
 bool PointLight::availableForLighting(const vec3f& d) const
 {
 	return true;
@@ -101,9 +111,14 @@ vec3f PointLight::shadowAttenuation(const vec3f& P) const
 	else return vec3f(1, 1, 1);
 }
 
+/// <summary>
+/// 
+/// </summary>
+/// <param name="d">direction from light to isec</param>
+/// <returns></returns>
 bool SpotLight::availableForLighting(const vec3f& d) const
 {
-	double cosine = -d.normalize().dot(orientation);
+	double cosine = d.dot(orientation);
 	return cosine > cosouter;
 }
 

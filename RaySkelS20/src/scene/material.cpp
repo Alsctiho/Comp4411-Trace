@@ -12,6 +12,11 @@ namespace
 	}
 }
 
+vec3f Material::preshade(Scene* scene, const ray& r, const isect& i) const
+{
+	return vec3f();
+}
+
 // Apply the phong model to this point on the surface of the object, returning
 // the color of that point.
 vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
@@ -42,8 +47,12 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 
 	for (auto cliter = scene->beginLights(); cliter != scene->endLights(); ++cliter)
 	{
+		// Spot light
+		vec3f l2i = (isectP - (*cliter)->getPosition()).normalize();
+		if (!(*cliter)->availableForLighting(l2i))
+			continue;
 
-		double dAtt = (*cliter)->distanceAttenuation (isectP);
+		double dAtt = (*cliter)->distanceAttenuation(isectP);
 		vec3f sAtt = (*cliter)->shadowAttenuation(isectP);
 		vec3f atten = dAtt * sAtt;
 		// dAtt = (dAtt < 1) ? dAtt : 1;

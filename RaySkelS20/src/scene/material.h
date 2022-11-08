@@ -30,6 +30,10 @@ public:
               const vec3f& d, const vec3f& r, const vec3f& t, double sh, double in)
         : ke( e ), ka( a ), ks( s ), kd( d ), kr( r ), kt( t ), shininess( sh ), index( in ) {}
 
+    /// <summary>
+    /// For ambient only.
+    /// </summary>
+    virtual vec3f preshade(Scene* scene, const ray& r, const isect& i) const;
 	virtual vec3f shade( Scene *scene, const ray& r, const isect& i ) const;
 
     /* 

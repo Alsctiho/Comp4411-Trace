@@ -74,7 +74,10 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 
 		bool inside = isInsideGeometry(incident, normal);
 
-		phong = m.shade(scene, r, i);
+		if (depth == traceUI->getDepth())
+			phong += m.preshade(scene, r, i);
+
+		phong += m.shade(scene, r, i);
 		//if (phong < thresh)  return phong; // adaptive termination based on thresh
 		normal = (inside) ? -normal : normal;
 

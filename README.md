@@ -5,4 +5,4 @@
 - [ ] adaptive termination
 - [x] antialiasing by supersampling and averaging down
     - [x] jittering the sub-pixel samples
-- [ ] spot lights
+- [x] spot lights
