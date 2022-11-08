@@ -38,6 +38,11 @@ vec3f DirectionalLight::getDirection( const vec3f& P ) const
 	return -orientation;
 }
 
+bool DirectionalLight::availableForLighting(const vec3f& d) const
+{
+	return true;
+}
+
 double PointLight::distanceAttenuation( const vec3f& P ) const
 {
 	// YOUR CODE HERE
@@ -73,6 +78,10 @@ vec3f PointLight::getDirection( const vec3f& P ) const
 	return (position - P).normalize();
 }
 
+bool PointLight::availableForLighting(const vec3f& d) const
+{
+	return true;
+}
 
 vec3f PointLight::shadowAttenuation(const vec3f& P) const
 {
@@ -90,6 +99,12 @@ vec3f PointLight::shadowAttenuation(const vec3f& P) const
 		return i.getMaterial().kt;
 	}
 	else return vec3f(1, 1, 1);
+}
+
+bool SpotLight::availableForLighting(const vec3f& d) const
+{
+	double cosine = -d.normalize().dot(orientation);
+	return cosine > cosouter;
 }
 
 /*

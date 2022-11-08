@@ -1,6 +1,5 @@
 #include "camera.h"
 
-#define PI 3.14159265359
 #define SHOW(x) (cerr << #x << " = " << (x) << "\n")
 
 Camera::Camera()

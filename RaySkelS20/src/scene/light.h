@@ -13,6 +13,7 @@ public:
 	virtual double distanceAttenuation( const vec3f& P ) const = 0;
 	virtual vec3f getColor( const vec3f& P ) const = 0;
 	virtual vec3f getDirection( const vec3f& P ) const = 0;
+	virtual bool availableForLighting( const vec3f& d ) const = 0;
 
 protected:
 	Light( Scene *scene, const vec3f& col )
@@ -31,6 +32,7 @@ public:
 	virtual double distanceAttenuation( const vec3f& P ) const;
 	virtual vec3f getColor( const vec3f& P ) const;
 	virtual vec3f getDirection( const vec3f& P ) const;
+	virtual bool availableForLighting(const vec3f& d) const;
 
 protected:
 	vec3f 		orientation;
@@ -46,6 +48,7 @@ public:
 	virtual double distanceAttenuation( const vec3f& P ) const;
 	virtual vec3f getColor( const vec3f& P ) const;
 	virtual vec3f getDirection( const vec3f& P ) const;
+	virtual bool availableForLighting(const vec3f& d) const;
 	void setCAtt(double a) { this->a = a; }
 	void setLAtt(double b) { this->b = b; }
 	void setQAtt(double c) { this->c = c; }
@@ -57,6 +60,31 @@ protected:
 	double b = 0;
 	double c = 0;
 
+};
+
+class SpotLight
+	: public PointLight
+{
+public:
+	SpotLight(Scene* scene, const vec3f& pos, const vec3f& color, const vec3f& orien, double outer, double inner)
+		: PointLight(scene, pos, color), orientation(orien.normalize()), outer(outer), inner(inner)
+	{
+		cosouter = cos(radian(outer));
+		cosinner = cos(radian(inner));
+	}
+	
+	virtual bool availableForLighting(const vec3f& d) const;
+	double getOuterCutoff() { return outer; }
+	double getInnerCutoff() { return inner; }
+	void setOuterCutoff(double o) { outer = o; }
+	void setInnerCutoff(double i) { inner = i; }
+
+protected:
+	vec3f orientation;
+	double outer;
+	double inner; // inner < outer
+	double cosouter;
+	double cosinner;
 };
 
 class AmbientLight: SceneElement

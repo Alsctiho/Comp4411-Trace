@@ -524,7 +524,8 @@ static void processObject( Obj *obj, Scene *scene, mmap& materials )
 		scene->add( new DirectionalLight( scene, 
 			tupleToVec( getField( child, "direction" ) ).normalize(),
 			tupleToVec( getColorField( child ) ) ) );
-	} else if( name == "point_light" ) {
+	} 
+	else if( name == "point_light" ) {
 		if( child == NULL ) {
 			throw ParseError( "No info for point_light" );
 		}
@@ -538,7 +539,28 @@ static void processObject( Obj *obj, Scene *scene, mmap& materials )
 			pl->setLAtt(getField(child, "linear_attenuation_coeff")->getScalar());
 		if (hasField(child, "quadratic_attenuation_coeff"))
 			pl->setQAtt(getField(child, "quadratic_attenuation_coeff")->getScalar());
-	} 
+	}
+	else if (name == "spot_light") {
+		if (child == NULL) {
+			throw ParseError("No info for spot_light");
+		}
+		cout << "prase spot_light" << endl;
+		SpotLight* sl = new SpotLight(scene,
+			tupleToVec(getField(child, "position")),
+			tupleToVec(getColorField(child)),
+			tupleToVec(getField(child, "direction")),
+			getField(child, "outer")->getScalar(),
+			getField(child, "inner")->getScalar());
+
+		scene->add(sl);
+
+		if (hasField(child, "constant_attenuation_coeff"))
+			sl->setCAtt(getField(child, "constant_attenuation_coeff")->getScalar());
+		if (hasField(child, "linear_attenuation_coeff"))
+			sl->setLAtt(getField(child, "linear_attenuation_coeff")->getScalar());
+		if (hasField(child, "quadratic_attenuation_coeff"))
+			sl->setQAtt(getField(child, "quadratic_attenuation_coeff")->getScalar());
+	}
 	else if( name == "ambient_light" ) {
 		if (child == NULL) {
 			throw ParseError("No info for ambient_light");

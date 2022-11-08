@@ -10,6 +10,8 @@
 #include <vector>
 #include <cstdlib>
 
+#define PI 3.14159265359
+
 using namespace std;
 
 class vec3f;
@@ -30,6 +32,11 @@ inline double minimum( double a, double b )
 inline double maximum( double a, double b )
 {
 	return a > b ? a : b;
+}
+
+inline double radian(double degree)
+{
+	return degree * PI / 180;
 }
 
 class vec3f
