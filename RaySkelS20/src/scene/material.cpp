@@ -48,7 +48,7 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 	for (auto cliter = scene->beginLights(); cliter != scene->endLights(); ++cliter)
 	{
 		// Spot light && flaps
-		vec3f l2i = (isectP - (*cliter)->getPosition()).normalize();
+		vec3f l2i = (isectP - (*cliter)->getPosition());
 		if (!(*cliter)->availableForLighting(l2i))
 			continue;
 
