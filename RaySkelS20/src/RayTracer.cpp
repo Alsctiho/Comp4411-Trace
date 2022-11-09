@@ -122,8 +122,12 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 			phong += m.preshade(scene, r, i);
 
 		phong += m.shade(scene, r, i);
-		//if (phong < thresh)  return phong; // adaptive termination based on thresh
 		normal = (inside) ? -normal : normal;
+
+		if (adaptiveTerminate(phong, thresh))
+		{
+			return phong;
+		}
 
 		// Reflection
 		vec3f reflectedDir = reflect(-incident, normal).normalize();
@@ -304,4 +308,10 @@ void RayTracer::tracePixel( int i, int j )
 	pixel[0] = (int)( 255.0 * col[0]);
 	pixel[1] = (int)( 255.0 * col[1]);
 	pixel[2] = (int)( 255.0 * col[2]);
+}
+
+bool RayTracer::adaptiveTerminate(const vec3f& col, const vec3f& thresh)
+{
+	cout << col.length() << " " << thresh.length();
+	return col.length() < thresh.length();
 }

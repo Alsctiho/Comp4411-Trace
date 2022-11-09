@@ -24,6 +24,7 @@ public:
 	void tracePixel( int i, int j );
 
 	bool loadScene( char* fn );
+	bool adaptiveTerminate(const vec3f& col, const vec3f& thresh);
 
 	bool sceneLoaded();
 

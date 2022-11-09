@@ -294,6 +294,7 @@ TraceUI::TraceUI() {
 	m_nLineAtt = 0.25;
 	m_nQuadAtt = 0.50;
 	m_nAntialiasing = 0;
+	m_nThresh = 0.00;
 
 	m_mainWindow = new Fl_Window(100, 40, 350, 600, "Ray <Not Loaded>");
 		m_mainWindow->user_data((void*)(this));	// record self to be used by static callback functions
@@ -372,8 +373,8 @@ TraceUI::TraceUI() {
 		m_thresh->type(FL_HOR_NICE_SLIDER);
 		m_thresh->labelfont(FL_COURIER);
 		m_thresh->labelsize(12);
-		m_thresh->minimum(0.00);
-		m_thresh->maximum(1.00);
+		m_thresh->minimum(0.0);
+		m_thresh->maximum(0.2);
 		m_thresh->step(0.01);
 		m_thresh->value(0.0);
 		m_thresh->align(FL_ALIGN_RIGHT);
