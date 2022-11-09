@@ -43,9 +43,26 @@ vec3f DirectionalLight::getPosition() const
 	return vec3f();
 }
 
-bool DirectionalLight::availableForLighting(const vec3f& d) const
+/// <summary>
+/// 
+/// </summary>
+/// <param name="i">intersection point position</param>
+/// <returns></returns>
+bool DirectionalLight::availableForLighting(const vec3f& i) const
 {
-	return true;
+	if (isFlapping == false)
+		return true;
+	
+	vec3f a = i - position;
+	double area = abs(a.cross(orientation).length());
+	double distance = area / orientation.length();
+	cout << distance << endl;
+	return distance < radius;
+}
+
+double DirectionalLight::softEdge(const vec3f& d) const
+{
+	return 1.0;
 }
 
 double PointLight::distanceAttenuation( const vec3f& P ) const
@@ -93,6 +110,11 @@ bool PointLight::availableForLighting(const vec3f& d) const
 	return true;
 }
 
+double PointLight::softEdge(const vec3f& d) const
+{
+	return 1.0;
+}
+
 vec3f PointLight::shadowAttenuation(const vec3f& P) const
 {
     // YOUR CODE HERE:
@@ -120,6 +142,12 @@ bool SpotLight::availableForLighting(const vec3f& d) const
 {
 	double cosine = d.dot(orientation);
 	return cosine > cosouter;
+}
+
+double SpotLight::softEdge(const vec3f& d) const
+{
+	double cosine = d.dot(orientation);
+	return (cosine - cosouter) / (cosinner - cosouter);
 }
 
 /*

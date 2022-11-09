@@ -47,7 +47,7 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 
 	for (auto cliter = scene->beginLights(); cliter != scene->endLights(); ++cliter)
 	{
-		// Spot light
+		// Spot light && flaps
 		vec3f l2i = (isectP - (*cliter)->getPosition()).normalize();
 		if (!(*cliter)->availableForLighting(l2i))
 			continue;
@@ -77,6 +77,8 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 			Iphong += prod(pow(RdV, shininess * 128) * prod(Il, ks), atten);
 		}
 		// double specular = pow(coss, shininess*128);
+
+		Iphong *= (*cliter)->softEdge(l2i);
 	}
 	return Iphong;
 }

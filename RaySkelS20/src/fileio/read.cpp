@@ -521,10 +521,17 @@ static void processObject( Obj *obj, Scene *scene, mmap& materials )
 			throw ParseError( "No info for directional_light" );
 		}
 
-		scene->add( new DirectionalLight( scene, 
-			tupleToVec( getField( child, "direction" ) ).normalize(),
-			tupleToVec( getColorField( child ) ) ) );
-	} 
+		DirectionalLight* light = new DirectionalLight(scene,
+			tupleToVec(getField(child, "direction")).normalize(),
+			tupleToVec(getColorField(child)));
+
+		if(hasField(child, "position"))
+			light->setPosition(tupleToVec(getField(child, "position")));
+		if (hasField(child, "radius"))
+			light->setRadius(getField(child, "radius")->getScalar());
+
+		scene->add(light);
+	}
 	else if( name == "point_light" ) {
 		if( child == NULL ) {
 			throw ParseError( "No info for point_light" );
