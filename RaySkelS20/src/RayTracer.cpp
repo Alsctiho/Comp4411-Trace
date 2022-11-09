@@ -30,7 +30,7 @@ vec3f RayTracer::trace( Scene *scene, int i, int j, int buffer_width, int buffer
 		ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
 
 		scene->getCamera()->rayThrough(x, y, r);
-		result = traceRay(scene, r, traceUI->getThresh(), traceUI->getDepth()).clamp();
+		result = traceRay(scene, r, traceUI->getDepth()).clamp();
 	}
 	else
 	{
@@ -39,7 +39,7 @@ vec3f RayTracer::trace( Scene *scene, int i, int j, int buffer_width, int buffer
 		scene->getCamera()->rayThroughAntialising(i, j, range, rays, buffer_width, buffer_height);
 
 		for(ray r : rays)
-			result += traceRay(scene, r, traceUI->getThresh(), traceUI->getDepth()).clamp();
+			result += traceRay(scene, r, traceUI->getDepth()).clamp();
 
 		result /= rays.size();
 	}
@@ -55,7 +55,7 @@ vec3f RayTracer::traceAdaptive(Scene* scene, double x, double y, double offsetX,
 	{
 		ray r;
 		scene->getCamera()->rayThrough(x, y, r);
-		result = traceRay(scene, r, traceUI->getThresh(), traceUI->getDepth()).clamp();
+		result = traceRay(scene, r, traceUI->getDepth()).clamp();
 	}
 	else
 	{
@@ -70,11 +70,11 @@ vec3f RayTracer::traceAdaptive(Scene* scene, double x, double y, double offsetX,
 		scene->getCamera()->rayThrough(x + newOffsetX, y + newOffsetY, c);
 
 		vec3f rul, rur, rdl, rdr, rc;
-		rul = traceRay(scene, ul, traceUI->getThresh(), traceUI->getDepth()).clamp();
-		rur = traceRay(scene, ur, traceUI->getThresh(), traceUI->getDepth()).clamp();
-		rdl = traceRay(scene, dl, traceUI->getThresh(), traceUI->getDepth()).clamp();
-		rdr = traceRay(scene, dr, traceUI->getThresh(), traceUI->getDepth()).clamp();
-		rc = traceRay(scene, c, traceUI->getThresh(), traceUI->getDepth()).clamp();
+		rul = traceRay(scene, ul, traceUI->getDepth()).clamp();
+		rur = traceRay(scene, ur, traceUI->getDepth()).clamp();
+		rdl = traceRay(scene, dl, traceUI->getDepth()).clamp();
+		rdr = traceRay(scene, dr, traceUI->getDepth()).clamp();
+		rc = traceRay(scene, c, traceUI->getDepth()).clamp();
 		
 		if((rul - rc).length() > 0.05)
 			rul = traceAdaptive(scene, x, y, newOffsetX, newOffsetY, depth - 1);
@@ -93,8 +93,7 @@ vec3f RayTracer::traceAdaptive(Scene* scene, double x, double y, double offsetX,
 
 // Do recursive ray tracing!  You'll want to insert a lot of code here
 // (or places called from here) to handle reflection, refraction, etc etc.
-vec3f RayTracer::traceRay( Scene *scene, const ray& r, 
-	const vec3f& thresh, int depth )
+vec3f RayTracer::traceRay( Scene *scene, const ray& r, int depth )
 {
 	isect i;
 
@@ -124,15 +123,13 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 		phong += m.shade(scene, r, i);
 		normal = (inside) ? -normal : normal;
 
-		if (adaptiveTerminate(phong, thresh))
-		{
+		if (adaptiveTerminate(phong))
 			return phong;
-		}
 
 		// Reflection
 		vec3f reflectedDir = reflect(-incident, normal).normalize();
 		ray reflectedRay{ isecPos + reflectedDir * RAY_EPSILON, reflectedDir };
-		reflection = prod(m.kr, (traceRay(scene, reflectedRay, thresh, depth - 1)));
+		reflection = prod(m.kr, (traceRay(scene, reflectedRay, depth - 1)));
 
 		if (m.index == 1.0 && m.kt == vec3f(0.0, 0.0, 0.0))
 			return phong + reflection;
@@ -165,7 +162,7 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r,
 
 		// Step 3: Ray
 		ray refractiveRay{ isecPos + refractiveDir * RAY_EPSILON, refractiveDir };
-		refraction = prod(m.kt, traceRay(scene, refractiveRay, thresh, depth - 1));
+		refraction = prod(m.kt, traceRay(scene, refractiveRay, depth - 1));
 
 		return phong + reflection + refraction;
 
@@ -310,8 +307,7 @@ void RayTracer::tracePixel( int i, int j )
 	pixel[2] = (int)( 255.0 * col[2]);
 }
 
-bool RayTracer::adaptiveTerminate(const vec3f& col, const vec3f& thresh)
+bool RayTracer::adaptiveTerminate(const vec3f& col)
 {
-	cout << col.length() << " " << thresh.length();
-	return col.length() < thresh.length();
+	return col.length() < traceUI->getThresh();
 }

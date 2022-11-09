@@ -54,7 +54,7 @@ public:
 	bool		AttenCoeffHasChanged();
 	bool		isAdaptiveSampling();
 
-	vec3f		getThresh();
+	double		getThresh();
 	int			getAntialiasing();
 
 private:

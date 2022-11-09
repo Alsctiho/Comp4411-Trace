@@ -251,9 +251,9 @@ double TraceUI::getQuadAtt()
 	return m_nQuadAtt;
 }
 
-vec3f TraceUI::getThresh()
+double TraceUI::getThresh()
 {
-	return vec3f(m_nThresh, m_nThresh, m_nThresh);
+	return m_nThresh;
 }
 
 int TraceUI::getAntialiasing()
@@ -374,8 +374,8 @@ TraceUI::TraceUI() {
 		m_thresh->labelfont(FL_COURIER);
 		m_thresh->labelsize(12);
 		m_thresh->minimum(0.0);
-		m_thresh->maximum(0.2);
-		m_thresh->step(0.01);
+		m_thresh->maximum(1.0);
+		m_thresh->step(0.02);
 		m_thresh->value(0.0);
 		m_thresh->align(FL_ALIGN_RIGHT);
 		m_thresh->callback(cb_threshSlides);
