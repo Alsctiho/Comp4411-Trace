@@ -10,3 +10,6 @@
 - [ ] texture mapping
     - [ ] background image
 - [x] adaptive sampling
+- [ ] more realistic shading model
+    - [ ] Fresnel term
+- [ ] cel shading 

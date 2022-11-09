@@ -12,7 +12,7 @@ ambient_light
 	color = (0, 0.1, 0.0);
 }
 
-flapping_light
+circular_light
 {
 	position = (5, 0, 0);
 	color = (1, 1, 1);

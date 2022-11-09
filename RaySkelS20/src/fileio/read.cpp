@@ -527,19 +527,34 @@ static void processObject( Obj *obj, Scene *scene, mmap& materials )
 
 		scene->add(light);
 	}
-	else if (name == "flapping_light")
+	else if (name == "circular_light")
 	{
 		if (child == NULL) {
-			throw ParseError("No info for directional_light");
+			throw ParseError("No info for circular_light");
 		}
 
-		FlappingLight* light = new FlappingLight(scene,
+		CircularLight* light = new CircularLight(scene,
 			tupleToVec(getField(child, "direction")).normalize(),
 			tupleToVec(getColorField(child)),
 			tupleToVec(getField(child, "position")));
 
 		if (hasField(child, "radius"))
 			light->setRadius(getField(child, "radius")->getScalar());
+
+		scene->add(light);
+	}
+	else if (name == "trianglar_light")
+	{
+		if (child == NULL) {
+			throw ParseError("No info for trianglar_light");
+		}
+
+		TrianglarLight* light = new TrianglarLight(scene,
+			tupleToVec(getField(child, "direction")).normalize(),
+			tupleToVec(getColorField(child)),
+			tupleToVec(getField(child, "position1")),
+			tupleToVec(getField(child, "position2")),
+			tupleToVec(getField(child, "position3")));
 
 		scene->add(light);
 	}

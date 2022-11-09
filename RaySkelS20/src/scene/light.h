@@ -43,15 +43,15 @@ protected:
 
 };
 
-class FlappingLight : public DirectionalLight
+class CircularLight : public DirectionalLight
 {
 public:
-	FlappingLight(Scene* scene, const vec3f& orien, const vec3f& color, const vec3f& pos)
+	CircularLight(Scene* scene, const vec3f& orien, const vec3f& color, const vec3f& pos)
 		: DirectionalLight(scene, orien, color), position(pos), radius(0.0) {}
 
 	virtual vec3f getPosition() const;
 	virtual bool availableForLighting(const vec3f& i) const;
-	virtual double softEdge(const vec3f& d) const;
+	virtual double softEdge(const vec3f& i) const;
 
 	//flaps
 	void setRadius(double r) { this->radius = r; }
@@ -59,6 +59,22 @@ public:
 protected:
 	vec3f		position;
 	double		radius;
+};
+
+class TrianglarLight : public DirectionalLight
+{
+public:
+	TrianglarLight(Scene* scene, const vec3f& orien, const vec3f& color, 
+		const vec3f& pos1, const vec3f& pos2, const vec3f& pos3)
+		: DirectionalLight(scene, orien, color), p1(pos1), p2(pos2), p3(pos3) {}
+	
+	virtual bool availableForLighting(const vec3f& i) const;
+	virtual double softEdge(const vec3f& i) const;
+
+protected:
+	vec3f		p1;
+	vec3f		p2;
+	vec3f		p3;
 };
 
 class PointLight
@@ -98,7 +114,7 @@ public:
 		cosinner = cos(radian(inner));
 	}
 	
-	virtual bool availableForLighting(const vec3f& d) const;
+	virtual bool availableForLighting(const vec3f& isectP) const;
 	virtual double softEdge(const vec3f& d) const;
 	double getOuterCutoff() { return outer; }
 	double getInnerCutoff() { return inner; }

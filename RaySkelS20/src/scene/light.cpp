@@ -53,7 +53,7 @@ double DirectionalLight::softEdge(const vec3f& l2i) const
 	return 1.0;
 }
 
-vec3f FlappingLight::getPosition() const
+vec3f CircularLight::getPosition() const
 {
 	return position;
 }
@@ -63,15 +63,17 @@ vec3f FlappingLight::getPosition() const
 /// </summary>
 /// <param name="i">light to isectP</param>
 /// <returns></returns>
-bool FlappingLight::availableForLighting(const vec3f& l2i) const
+bool CircularLight::availableForLighting(const vec3f& isectP) const
 {
+	vec3f l2i = isectP - getPosition();
 	double area = abs(l2i.cross(orientation).length());
 	double distance = area / orientation.length();
 	return distance < radius;
 }
 
-double FlappingLight::softEdge(const vec3f& l2i) const
+double CircularLight::softEdge(const vec3f& isectP) const
 {
+	vec3f l2i = isectP - getPosition();
 	double area = abs(l2i.cross(orientation).length());
 	double distance = area / orientation.length();
 
@@ -85,7 +87,34 @@ double FlappingLight::softEdge(const vec3f& l2i) const
 		double x = (radius - distance) / 0.2 * radius;
 		return 3 * x * x - 2 * x * x * x;
 	}
+}
 
+bool TrianglarLight::availableForLighting(const vec3f& isectP) const
+{
+	vec3f dir = orientation.normalize();
+
+	// make z the same
+	auto find = [](const vec3f& pos, const vec3f& dir, double z) -> vec3f
+	{
+		double t = (z - pos[2]) / dir[3];
+		double x = pos[0] + dir[0] * t;
+		double y = pos[1] + dir[1] * t;
+		return vec3f(x, y, z);
+	};
+
+	vec3f pos1 = find(p1, dir, isectP[3]);
+	vec3f pos2 = find(p2, dir, isectP[3]);
+	vec3f pos3 = find(p3, dir, isectP[3]);
+
+	bool inside;
+
+
+	return inside;
+}
+
+double TrianglarLight::softEdge(const vec3f& i) const
+{
+	return 1.0;
 }
 
 double PointLight::distanceAttenuation( const vec3f& P ) const
@@ -161,14 +190,16 @@ vec3f PointLight::shadowAttenuation(const vec3f& P) const
 /// </summary>
 /// <param name="d">direction from light to isec</param>
 /// <returns></returns>
-bool SpotLight::availableForLighting(const vec3f& d) const
+bool SpotLight::availableForLighting(const vec3f& isectP) const
 {
-	double cosine = d.normalize().dot(orientation);
+	vec3f l2i = isectP - getPosition();
+	double cosine = l2i.normalize().dot(orientation);
 	return cosine > cosouter;
 }
 
-double SpotLight::softEdge(const vec3f& l2i) const
+double SpotLight::softEdge(const vec3f& isectP) const
 {
+	vec3f l2i = isectP - getPosition();
 	double cosine = l2i.normalize().dot(orientation.normalize());
 	return (cosine - cosouter) / (cosinner - cosouter);
 }

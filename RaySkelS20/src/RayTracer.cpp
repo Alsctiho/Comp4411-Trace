@@ -155,7 +155,6 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r, int depth )
 			//refractiveDir = refract(-incident, normal, outsideMaterial->index, insideMaterial->index);
 			refractiveDir = refract(-incident, normal, 1.0, m.index).normalize();
 		}
-
 		
 		if (refractiveDir == vec3f(0.0, 0.0, 0.0)) // handles tir
 			return phong + reflection;
@@ -165,7 +164,6 @@ vec3f RayTracer::traceRay( Scene *scene, const ray& r, int depth )
 		refraction = prod(m.kt, traceRay(scene, refractiveRay, depth - 1));
 
 		return phong + reflection + refraction;
-
 	
 	} else {
 		// No intersection.  This ray travels to infinity, so we color
