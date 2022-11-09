@@ -43,25 +43,49 @@ vec3f DirectionalLight::getPosition() const
 	return vec3f();
 }
 
+bool DirectionalLight::availableForLighting(const vec3f& i) const
+{
+	return true;
+}
+
+double DirectionalLight::softEdge(const vec3f& l2i) const
+{
+	return 1.0;
+}
+
+vec3f FlappingLight::getPosition() const
+{
+	return position;
+}
+
 /// <summary>
 /// 
 /// </summary>
 /// <param name="i">light to isectP</param>
 /// <returns></returns>
-bool DirectionalLight::availableForLighting(const vec3f& i) const
+bool FlappingLight::availableForLighting(const vec3f& l2i) const
 {
-	if (isFlapping == false)
-		return true;
-
-	double area = abs(i.cross(orientation).length());
+	double area = abs(l2i.cross(orientation).length());
 	double distance = area / orientation.length();
-	cout << distance << endl;
 	return distance < radius;
 }
 
-double DirectionalLight::softEdge(const vec3f& d) const
+double FlappingLight::softEdge(const vec3f& l2i) const
 {
-	return 1.0;
+	double area = abs(l2i.cross(orientation).length());
+	double distance = area / orientation.length();
+
+	// Smoothstep: https://en.wikipedia.org/wiki/Smoothstep
+	if (distance < radius * 0.8)
+		return 1.0;
+	else if (distance > radius)
+		return 0.0;
+	else
+	{
+		double x = (radius - distance) / 0.2 * radius;
+		return 3 * x * x - 2 * x * x * x;
+	}
+
 }
 
 double PointLight::distanceAttenuation( const vec3f& P ) const
@@ -143,9 +167,9 @@ bool SpotLight::availableForLighting(const vec3f& d) const
 	return cosine > cosouter;
 }
 
-double SpotLight::softEdge(const vec3f& d) const
+double SpotLight::softEdge(const vec3f& l2i) const
 {
-	double cosine = d.dot(orientation.normalize());
+	double cosine = l2i.normalize().dot(orientation.normalize());
 	return (cosine - cosouter) / (cosinner - cosouter);
 }
 

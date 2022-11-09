@@ -47,6 +47,8 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 
 	for (auto cliter = scene->beginLights(); cliter != scene->endLights(); ++cliter)
 	{
+		vec3f temp;
+
 		// Spot light && flaps
 		vec3f l2i = (isectP - (*cliter)->getPosition());
 		if (!(*cliter)->availableForLighting(l2i))
@@ -64,7 +66,7 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 		if (NdL > 0)
 		{
 			// Iphong += prod(NdL * prod(Il, kd), atten);
-			Iphong += prod(prod(NdL * prod(Il, kd), atten), vec3f(1.0, 1.0, 1.0) - kt);
+			temp += prod(prod(NdL * prod(Il, kd), atten), vec3f(1.0, 1.0, 1.0) - kt);
 		}
 
 		// 6.5.3.3 specular reflection
@@ -74,11 +76,11 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 		double RdV = R.dot(V);
 		if (RdV > 0)
 		{
-			Iphong += prod(pow(RdV, shininess * 128) * prod(Il, ks), atten);
+			temp += prod(pow(RdV, shininess * 128) * prod(Il, ks), atten);
 		}
 		// double specular = pow(coss, shininess*128);
 
-		Iphong *= (*cliter)->softEdge(l2i);
+		Iphong += temp * (*cliter)->softEdge(l2i);
 	}
 	return Iphong;
 }

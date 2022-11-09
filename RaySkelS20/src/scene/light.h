@@ -29,7 +29,7 @@ class DirectionalLight
 {
 public:
 	DirectionalLight( Scene *scene, const vec3f& orien, const vec3f& color )
-		: Light( scene, color ), orientation( orien ), position(), radius(0.0), isFlapping(false) {}
+		: Light( scene, color ), orientation( orien ) {}
 	virtual vec3f shadowAttenuation(const vec3f& P) const;
 	virtual double distanceAttenuation( const vec3f& P ) const;
 	virtual vec3f getColor( const vec3f& P ) const;
@@ -38,15 +38,27 @@ public:
 	virtual bool availableForLighting(const vec3f& i) const;
 	virtual double softEdge(const vec3f& d) const;
 
-	//flaps
-	void setPosition(const vec3f& p) { isFlapping = true; this->position = p; }
-	void setRadius( double r ) { this->radius = r; }
-
 protected:
 	vec3f 		orientation;
+
+};
+
+class FlappingLight : public DirectionalLight
+{
+public:
+	FlappingLight(Scene* scene, const vec3f& orien, const vec3f& color, const vec3f& pos)
+		: DirectionalLight(scene, orien, color), position(pos), radius(0.0) {}
+
+	virtual vec3f getPosition() const;
+	virtual bool availableForLighting(const vec3f& i) const;
+	virtual double softEdge(const vec3f& d) const;
+
+	//flaps
+	void setRadius(double r) { this->radius = r; }
+
+protected:
 	vec3f		position;
 	double		radius;
-	bool		isFlapping;
 };
 
 class PointLight

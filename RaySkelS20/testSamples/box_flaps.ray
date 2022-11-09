@@ -12,16 +12,16 @@ ambient_light
 	color = (0, 0.1, 0.0);
 }
 
-directional_light
+flapping_light
 {
 	position = (5, 0, 0);
 	color = (1, 1, 1);
 	direction = (-1, 0, 0);
-	radius = 2;
+	radius = 1;
 }
 
 rotate(0.1, 0.1, 0.1, 20,
-	scale(2.0,
+	scale(3.0,
 		box {
 			material = {
 				ambient = (0, 0.3, 0);
