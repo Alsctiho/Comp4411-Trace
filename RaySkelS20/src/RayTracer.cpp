@@ -47,6 +47,50 @@ vec3f RayTracer::trace( Scene *scene, int i, int j, int buffer_width, int buffer
 	return result;
 }
 
+vec3f RayTracer::traceAdaptive(Scene* scene, double x, double y, double offsetX, double offsetY, int depth)
+{
+	vec3f result;
+
+	if (depth == 0)
+	{
+		ray r;
+		scene->getCamera()->rayThrough(x, y, r);
+		result = traceRay(scene, r, traceUI->getThresh(), traceUI->getDepth()).clamp();
+	}
+	else
+	{
+		double newOffsetX = offsetX / 2;
+		double newOffsetY = offsetY / 2;
+
+		ray ul, ur, dl, dr, c;
+		scene->getCamera()->rayThrough(x, y, ul);
+		scene->getCamera()->rayThrough(x + offsetX, y, ur);
+		scene->getCamera()->rayThrough(x, y + offsetY, dl);
+		scene->getCamera()->rayThrough(x + offsetX, y + offsetY, dr);
+		scene->getCamera()->rayThrough(x + newOffsetX, y + newOffsetY, c);
+
+		vec3f rul, rur, rdl, rdr, rc;
+		rul = traceRay(scene, ul, traceUI->getThresh(), traceUI->getDepth()).clamp();
+		rur = traceRay(scene, ur, traceUI->getThresh(), traceUI->getDepth()).clamp();
+		rdl = traceRay(scene, dl, traceUI->getThresh(), traceUI->getDepth()).clamp();
+		rdr = traceRay(scene, dr, traceUI->getThresh(), traceUI->getDepth()).clamp();
+		rc = traceRay(scene, c, traceUI->getThresh(), traceUI->getDepth()).clamp();
+		
+		if((rul - rc).length() > 0.05)
+			rul = traceAdaptive(scene, x, y, newOffsetX, newOffsetY, depth - 1);
+		if((rur - rc).length() > 0.05)
+			rur = traceAdaptive(scene, x + offsetX, y, newOffsetX, newOffsetY, depth - 1);
+		if((rdl - rc).length() > 0.05)
+			rdl = traceAdaptive(scene, x, y + offsetY, newOffsetX, newOffsetY, depth - 1);
+		if((rdr - rc).length() > 0.05)
+			rdr = traceAdaptive(scene, x + offsetX, y + offsetY, newOffsetX, newOffsetY, depth - 1);
+
+		result = (rul + rur + rdl + rdr + rc) / 5;
+	}
+
+	return result;
+}
+
 // Do recursive ray tracing!  You'll want to insert a lot of code here
 // (or places called from here) to handle reflection, refraction, etc etc.
 vec3f RayTracer::traceRay( Scene *scene, const ray& r, 
@@ -228,6 +272,8 @@ void RayTracer::traceLines( int start, int stop )
 			tracePixel(i,j);
 }
 
+
+
 void RayTracer::tracePixel( int i, int j )
 {
 	vec3f col;
@@ -236,8 +282,22 @@ void RayTracer::tracePixel( int i, int j )
 		return;
 
 
+	// default sampling and adaptive sampling
+	if (traceUI->isAdaptiveSampling())
+	{
+		double x = (double)i / (double)buffer_width;
+		double y = (double)j / (double)buffer_height;
 
-	col = trace( scene, i, j, buffer_width, buffer_height);
+		double offsetX = 1.0 / (double)buffer_width;
+		double offsetY = 1.0 / (double)buffer_height;
+
+		col = traceAdaptive(scene, x, y, offsetX, offsetY, 2);
+	}
+	else
+	{
+		col = trace(scene, i, j, buffer_width, buffer_height);
+	}
+
 
 	unsigned char *pixel = buffer + ( i + j * buffer_width ) * 3;
 

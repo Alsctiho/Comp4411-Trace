@@ -128,6 +128,11 @@ void TraceUI::cb_testLightButton(Fl_Widget* o, void* v)
 	else std::cout << 0 << endl;
 }
 
+void TraceUI::cb_adaptiveSamplingButton(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->m_nadaptiveSampling = int(((Fl_Button*)o)->value());
+}
+
 void TraceUI::cb_render(Fl_Widget* o, void* v)
 {
 	char buffer[256];
@@ -261,6 +266,11 @@ bool TraceUI::AttenCoeffHasChanged()
 	return AttenCoeffChanged;
 }
 
+bool TraceUI::isAdaptiveSampling()
+{
+	return m_nadaptiveSampling;
+}
+
 // menu definition
 Fl_Menu_Item TraceUI::menuitems[] = {
 	{ "&File",		0, 0, 0, FL_SUBMENU },
@@ -386,6 +396,11 @@ TraceUI::TraceUI() {
 		m_Testing = new Fl_Light_Button(10, 205, 60, 25, "Test");
 		m_Testing->user_data((void*)(this));
 		m_Testing->callback(cb_testLightButton);
+
+		// install a adaptive sampling button
+		m_adaptiveSampling = new Fl_Light_Button(90, 205, 100, 25, "Ad Sampling");
+		m_adaptiveSampling->user_data((void*)(this));
+		m_adaptiveSampling->callback(cb_adaptiveSamplingButton);
 
 		// install render button
 		m_renderButton = new Fl_Button(270, 27, 70, 25, "&Render");

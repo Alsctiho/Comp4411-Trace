@@ -37,6 +37,7 @@ public:
 	Fl_Light_Button*	m_Testing;
 	Fl_Button*			m_renderButton;
 	Fl_Button*			m_stopButton;
+	Fl_Light_Button*	m_adaptiveSampling;
 
 	TraceGLWindow*		m_traceGlWindow;
 
@@ -51,6 +52,7 @@ public:
 	double		getLineAtt();
 	double		getQuadAtt();
 	bool		AttenCoeffHasChanged();
+	bool		isAdaptiveSampling();
 
 	vec3f		getThresh();
 	int			getAntialiasing();
@@ -66,6 +68,7 @@ private:
 	double		m_nThresh;
 	int			m_nAntialiasing;
 	bool		AttenCoeffChanged = false;
+	bool		m_nadaptiveSampling = false;
 
 // static class members
 	static Fl_Menu_Item menuitems[];
@@ -88,6 +91,7 @@ private:
 	static void cb_antialiasingSlides(Fl_Widget* o, void* v);
 
 	static void cb_testLightButton(Fl_Widget* o, void* v);
+	static void cb_adaptiveSamplingButton(Fl_Widget* o, void* v);
 
 	static void cb_render(Fl_Widget* o, void* v);
 	static void cb_stop(Fl_Widget* o, void* v);

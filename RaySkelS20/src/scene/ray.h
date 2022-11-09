@@ -17,6 +17,8 @@ class SceneObject;
 
 class ray {
 public:
+    ray() 
+        : ray(vec3f(), vec3f()) {}
 	/// <summary>
 	/// construct a ray by its position and direction.
 	/// </summary>

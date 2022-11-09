@@ -14,6 +14,7 @@ public:
     ~RayTracer();
 
     vec3f trace( Scene *scene, int x, int y, int buffer_width, int buffer_height);
+	vec3f traceAdaptive( Scene *scene, double x, double y, double offsetX, double offsetY, int depth);
 	vec3f traceRay( Scene *scene, const ray& r, const vec3f& thresh, int depth );
 
 	void getBuffer( unsigned char *&buf, int &w, int &h );
