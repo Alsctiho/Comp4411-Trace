@@ -68,7 +68,7 @@ vec3f Material::shade( Scene *scene, const ray& r, const isect& i ) const
 		}
 
 		// 6.5.3.3 specular reflection
-		vec3f R = -reflect(L, N).normalize();
+		vec3f R = reflect(L, N).normalize();
 		vec3f V = -r.getDirection();
 		// vec3f V = r.getDirection().normalize();
 		double RdV = R.dot(V);
