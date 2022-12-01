@@ -29,9 +29,25 @@ inline double minimum( double a, double b )
 	return a < b ? a : b;
 }
 
+inline double minimum(double a, double b, double c)
+{
+	double min = a;
+	min = (min < b) ? min : b;
+	min = (min < c) ? min : c;
+	return min;
+}
+
 inline double maximum( double a, double b )
 {
 	return a > b ? a : b;
+}
+
+inline double maximum(double a, double b, double c)
+{
+	double max = a;
+	max = (max > b) ? max : b;
+	max = (max > c) ? max : c;
+	return max;
 }
 
 inline double radian(double degree)
@@ -452,9 +468,19 @@ inline vec3f minimum( const vec3f& a, const vec3f& b )
 	return vec3f( minimum(a.n[0],b.n[0]), minimum(a.n[1],b.n[1]), minimum(a.n[2],b.n[2]) );
 }
 
+inline vec3f minimum(const vec3f& a, const vec3f& b, const vec3f&c)
+{
+	return vec3f(minimum(a.n[0], b.n[0], c.n[0]), minimum(a.n[1], b.n[1], c.n[1]), minimum(a.n[2], b.n[2], c.n[2]));
+}
+
 inline vec3f maximum(const vec3f& a, const vec3f& b)
 {
 	return vec3f( maximum(a.n[0],b.n[0]), maximum(a.n[1],b.n[1]), maximum(a.n[2],b.n[2]) );
+}
+
+inline vec3f maximum(const vec3f& a, const vec3f& b, const vec3f& c)
+{
+	return vec3f(maximum(a.n[0], b.n[0], c.n[0]), maximum(a.n[1], b.n[1], c.n[1]), maximum(a.n[2], b.n[2], c.n[2]));
 }
 
 inline vec3f prod(const vec3f& a, const vec3f& b )
@@ -726,6 +752,60 @@ inline vec3f refract(const vec3f& incident, const vec3f& normal, double n1, doub
 		return vec3f(0.0, 0.0, 0.0);
 	else
 		return (eta * N_dot_I - sqrtf(k)) * normal - eta * incident;
+}
+
+inline float TriArea2D(float x1, float y1, float x2, float y2, float x3, float y3)
+{
+	return (x1 - x2) * (y2 - y3) - (x2 - x3) * (y1 - y2);
+}
+
+/// <summary>
+/// Compute barycentric coordinates (u, v, w) for
+/// point p with respect to triangle (a, b, c)
+/// @reference  Real-Time Collision Detection
+/// </summary>
+inline void barycentric(const vec3f& a, const vec3f& b, const vec3f& c, const vec3f& p,
+	float& u, float& v, float& w)
+{
+	// Unnormalized triangle normal
+	vec3f m = (a - b).cross(c - a);
+	// Nomiators and one-over-denominator for u and v ratios
+	float nu, nv, ood;
+	// Absolute components for determining projection plane
+	float x = abs(m[0]), y = abs(m[1]), z = abs(m[2]);
+
+	// Compute areas in plane of largest projection
+	if (x >= y && x >= z)
+	{
+		// x is largest, project to the yz plane
+		nu = TriArea2D(p[1], p[2], b[1], b[2], c[1], c[2]);
+		nv = TriArea2D(p[1], p[2], c[1], c[2], a[1], a[2]);
+		ood = 1.0f / m[0];
+	}
+	else if (y >= x && y >= z)
+	{
+		// y is largest, project to the xz plane
+		nu = TriArea2D(p[0], p[2], b[0], b[2], c[0], c[2]);
+		nv = TriArea2D(p[0], p[2], c[0], c[2], a[0], a[2]);
+		ood = 1.0f / -m[1];
+	}
+	else
+	{
+		// z is largest, project to the yz plane
+		nu = TriArea2D(p[0], p[1], b[0], b[1], c[0], c[1]);
+		nv = TriArea2D(p[0], p[1], c[0], c[1], a[0], a[1]);
+		ood = 1.0f / m[2];
+	}
+	u = nu * ood;
+	v = nv * ood;
+	w = 1.0f - u - v;
+}
+
+inline bool testPointTriangle(const vec3f& p, const vec3f& a, const vec3f& b, const vec3f& c)
+{
+	float u, v, w;
+	barycentric(a, b, c, p, u, v, w);
+	return u > 0 && v > 0 && 1 - u - v > 0;
 }
 
 #endif // __VECMATH_H__

@@ -18,6 +18,13 @@
 
 #include "TraceGLWindow.h"
 
+enum class SpatialType
+{
+	Default,
+	BSP,
+	Octree,
+};
+
 class TraceUI {
 public:
 	TraceUI();
@@ -38,6 +45,7 @@ public:
 	Fl_Button*			m_renderButton;
 	Fl_Button*			m_stopButton;
 	Fl_Light_Button*	m_adaptiveSampling;
+	Fl_Choice*			m_spatialStructure;
 
 	TraceGLWindow*		m_traceGlWindow;
 
@@ -53,6 +61,7 @@ public:
 	double		getQuadAtt();
 	bool		AttenCoeffHasChanged();
 	bool		isAdaptiveSampling();
+	SpatialType	getSpatialStructure();
 
 	double		getThresh();
 	int			getAntialiasing();
@@ -68,7 +77,8 @@ private:
 	double		m_nThresh;
 	int			m_nAntialiasing;
 	bool		AttenCoeffChanged = false;
-	bool		m_nadaptiveSampling = false;
+	bool		m_nAdaptiveSampling = false;
+	SpatialType	m_nSpatialStructure;
 
 // static class members
 	static Fl_Menu_Item menuitems[];
@@ -89,6 +99,7 @@ private:
 	static void cb_quadAttSlides(Fl_Widget* o, void* v);
 	static void cb_threshSlides(Fl_Widget* o, void* v);
 	static void cb_antialiasingSlides(Fl_Widget* o, void* v);
+	static void cb_spatialStructure(Fl_Widget* o, void* v);
 
 	static void cb_testLightButton(Fl_Widget* o, void* v);
 	static void cb_adaptiveSamplingButton(Fl_Widget* o, void* v);

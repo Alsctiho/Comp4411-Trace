@@ -136,6 +136,26 @@ Scene::~Scene()
 	}
 }
 
+void Scene::add(Geometry* obj)
+{
+	switch (traceUI->getSpatialStructure())
+	{
+	case SpatialType::Default:
+		obj->ComputeBoundingBox();
+		objects.push_back(obj);
+		break;
+
+	case SpatialType::BSP: 
+		break;
+
+	case SpatialType::Octree:
+		break;
+
+	default:
+		break;
+	}
+}
+
 void Scene::addAmbientLight(vec3f color)
 {
 	if (ambientLight == nullptr)
@@ -215,4 +235,34 @@ void Scene::initScene()
 vec3f Scene::getAmbientColor()
 {
 	return (ambientLight) ? ambientLight->getColor() : vec3f(0.0, 0.0, 0.0);
+}
+
+void BSPNode::constructBSP(list<Geometry*> objs)
+{
+	if (objs.size() <= 1)
+	{
+		geometries = std::move(objs);
+	}
+	else
+	{
+		list<Geometry*> front, back;
+		for (Geometry* obj : objs)
+		{
+			int res = plane->TestHalfSpace(obj);
+			if (res > 0)
+			{
+				front.push_back(obj);
+			}
+			else if (res < 0)
+			{
+				back.push_back(obj);
+			}
+			else
+			{
+				geometries.push_back(obj);
+			}
+		}
+
+
+	}
 }

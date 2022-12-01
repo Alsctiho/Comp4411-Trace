@@ -1,0 +1,32 @@
+SBT-raytracer 1.0
+
+camera
+{
+	position = (5, 0, 0);
+	viewdir = (-1, 0, 0);
+	updir = (0, 0, 1);
+}
+
+ambient_light
+{
+	color = (0, 0.1, 0.0);
+}
+
+trianglar_light
+{
+	position1 = (5, 0, 0);
+	position2 = (5, 1, 0);
+	position3 = (5, 0, 1);
+	color = (1, 1, 1);
+	direction = (-1, 0, 0);
+}
+
+rotate(0.1, 0.1, 0.1, 20,
+	scale(3.0,
+		box {
+			material = {
+				ambient = (0, 0.3, 0);
+				diffuse = (0, 0.9, 0);
+				transmissive = (0.7, 0.7, 0.7);
+			}
+		}))

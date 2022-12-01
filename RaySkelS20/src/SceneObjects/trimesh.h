@@ -67,11 +67,8 @@ public:
     virtual BoundingBox ComputeLocalBoundingBox()
     {
         BoundingBox localbounds;
-        localbounds.max = maximum( parent->vertices[ids[0]], parent->vertices[ids[1]]);
-		localbounds.min = minimum( parent->vertices[ids[0]], parent->vertices[ids[1]]);
-        
-        localbounds.max = maximum( parent->vertices[ids[2]], localbounds.max);
-		localbounds.min = minimum( parent->vertices[ids[2]], localbounds.min);
+        localbounds.max = maximum( parent->vertices[ids[0]], parent->vertices[ids[1]], parent->vertices[ids[2]]);
+		localbounds.min = minimum( parent->vertices[ids[0]], parent->vertices[ids[1]], parent->vertices[ids[2]]);
         return localbounds;
     }
     

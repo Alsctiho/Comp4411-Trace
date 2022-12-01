@@ -91,25 +91,12 @@ double CircularLight::softEdge(const vec3f& isectP) const
 
 bool TrianglarLight::availableForLighting(const vec3f& isectP) const
 {
+	// TODO: need debug
 	vec3f dir = orientation.normalize();
 
-	// make z the same
-	auto find = [](const vec3f& pos, const vec3f& dir, double z) -> vec3f
-	{
-		double t = (z - pos[2]) / dir[3];
-		double x = pos[0] + dir[0] * t;
-		double y = pos[1] + dir[1] * t;
-		return vec3f(x, y, z);
-	};
+	
 
-	vec3f pos1 = find(p1, dir, isectP[3]);
-	vec3f pos2 = find(p2, dir, isectP[3]);
-	vec3f pos3 = find(p3, dir, isectP[3]);
-
-	bool inside;
-
-
-	return inside;
+	return true;
 }
 
 double TrianglarLight::softEdge(const vec3f& i) const

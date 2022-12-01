@@ -130,7 +130,12 @@ void TraceUI::cb_testLightButton(Fl_Widget* o, void* v)
 
 void TraceUI::cb_adaptiveSamplingButton(Fl_Widget* o, void* v)
 {
-	((TraceUI*)(o->user_data()))->m_nadaptiveSampling = int(((Fl_Button*)o)->value());
+	((TraceUI*)(o->user_data()))->m_nAdaptiveSampling = int(((Fl_Button*)o)->value());
+}
+
+void TraceUI::cb_spatialStructure(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->m_nSpatialStructure = SpatialType(((Fl_Choice*)o)->value());
 }
 
 void TraceUI::cb_render(Fl_Widget* o, void* v)
@@ -268,7 +273,12 @@ bool TraceUI::AttenCoeffHasChanged()
 
 bool TraceUI::isAdaptiveSampling()
 {
-	return m_nadaptiveSampling;
+	return m_nAdaptiveSampling;
+}
+
+SpatialType	TraceUI::getSpatialStructure()
+{
+	return m_nSpatialStructure;
 }
 
 // menu definition
@@ -402,6 +412,14 @@ TraceUI::TraceUI() {
 		m_adaptiveSampling = new Fl_Light_Button(90, 205, 100, 25, "Ad Sampling");
 		m_adaptiveSampling->user_data((void*)(this));
 		m_adaptiveSampling->callback(cb_adaptiveSamplingButton);
+
+		// install a spatial data structure algorithm
+		m_spatialStructure = new Fl_Choice(120, 235, 100, 25, "Spatial Structure");
+		m_spatialStructure->user_data((void*)(this));
+		m_spatialStructure->add("Default");
+		m_spatialStructure->add("BSP");
+		m_spatialStructure->add("Octree");
+		m_spatialStructure->callback(cb_spatialStructure);
 
 		// install render button
 		m_renderButton = new Fl_Button(270, 27, 70, 25, "&Render");

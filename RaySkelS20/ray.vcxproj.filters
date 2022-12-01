@@ -52,6 +52,12 @@
       <UniqueIdentifier>{2a500cad-34e4-4544-a082-ff2e3169691d}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
     </Filter>
+    <Filter Include="Header Files\NonSceneObject">
+      <UniqueIdentifier>{c2177e21-2320-4339-b2be-df183e914517}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NonSceneObject">
+      <UniqueIdentifier>{e8281387-c2ea-40cd-b3b9-8f637e8c157d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\getopt.cpp">
@@ -114,6 +120,9 @@
     <ClCompile Include="src\SceneObjects\trimesh.cpp">
       <Filter>Source Files\SceneObjects</Filter>
     </ClCompile>
+    <ClCompile Include="src\NonSceneObjects\Plane.cpp">
+      <Filter>Source Files\NonSceneObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\RayTracer.h">
@@ -169,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="src\SceneObjects\trimesh.h">
       <Filter>Header Files\SceneObjects.</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NonSceneObjects\Plane.h">
+      <Filter>Header Files\NonSceneObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

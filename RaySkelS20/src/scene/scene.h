@@ -9,17 +9,20 @@
 
 #include <list>
 #include <algorithm>
+#include <memory>
 
 using namespace std;
 
 #include "ray.h"
 #include "material.h"
 #include "camera.h"
+#include "../NonSceneObjects/Plane.h"
 #include "../vecmath/vecmath.h"
 
 class Light;
 class Scene;
 class AmbientLight;
+class BSPNode;
 
 class SceneElement
 {
@@ -148,6 +151,11 @@ public:
 
 	virtual bool hasBoundingBoxCapability() const;
 	const BoundingBox& getBoundingBox() const { return bounds; }
+
+	/// <summary>
+	/// Axis-aligned bounding box (AABB)
+	/// Called before add to the scene, feel free to use bound in raytracing.
+	/// </summary>
 	virtual void ComputeBoundingBox()
     {
         // take the object's local bounding box, transform all 8 points on it,
@@ -194,11 +202,12 @@ public:
     virtual BoundingBox ComputeLocalBoundingBox() { return BoundingBox(); }
 
     void setTransform(TransformNode *transform) { this->transform = transform; };
-    
+
 	Geometry( Scene *scene ) 
 		: SceneElement( scene ) {}
 
 protected:
+	// bound in global space.
 	BoundingBox bounds;
     TransformNode *transform;
 };
@@ -217,6 +226,17 @@ public:
 protected:
 	SceneObject( Scene *scene )
 		: Geometry( scene ) {}
+};
+
+/// <summary>
+/// Hyperplanes that used for spatial data structure. Dont not render 
+/// in the scene.
+/// </summary>
+class NoneSceneObject : public Geometry
+{
+protected:
+	NoneSceneObject(Scene* scene)
+		: Geometry(scene) {}
 };
 
 // A simple extension of SceneObject that adds an instance of Material
@@ -255,11 +275,8 @@ public:
 		: transformRoot(), objects(), lights(), ambientLight(nullptr) {}
 	virtual ~Scene();
 
-	void add( Geometry* obj )
-	{
-		obj->ComputeBoundingBox();
-		objects.push_back( obj );
-	}
+	void add(Geometry* obj);
+
 	void add( Light* light )
 	{ lights.push_back( light ); }
 
@@ -282,11 +299,27 @@ private:
     list<Light*> lights;
     Camera camera;
 	AmbientLight* ambientLight;
+	BSPNode* root;
 	
 	// Each object in the scene, provided that it has hasBoundingBoxCapability(),
 	// must fall within this bounding box.  Objects that don't have hasBoundingBoxCapability()
 	// are exempt from this requirement.
 	BoundingBox sceneBounds;
+};
+
+class BSPNode
+{
+private:
+	Scene* scene;
+	Plane* plane;
+
+	list<Geometry*> geometries;
+	shared_ptr<BSPNode> front;
+	shared_ptr<BSPNode> back;
+
+public:
+	BSPNode(Scene* scene, Plane* plane): scene(scene), plane(plane) {}
+	void constructBSP(list<Geometry*> objs);
 };
 
 #endif // __SCENE_H__

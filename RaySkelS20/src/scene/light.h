@@ -66,15 +66,15 @@ class TrianglarLight : public DirectionalLight
 public:
 	TrianglarLight(Scene* scene, const vec3f& orien, const vec3f& color, 
 		const vec3f& pos1, const vec3f& pos2, const vec3f& pos3)
-		: DirectionalLight(scene, orien, color), p1(pos1), p2(pos2), p3(pos3) {}
+		: DirectionalLight(scene, orien, color), p0(pos1), p1(pos2), p2(pos3) {}
 	
 	virtual bool availableForLighting(const vec3f& i) const;
 	virtual double softEdge(const vec3f& i) const;
 
 protected:
+	vec3f		p0;
 	vec3f		p1;
 	vec3f		p2;
-	vec3f		p3;
 };
 
 class PointLight
