@@ -2,6 +2,10 @@
 
 #include "light.h"
 #include "ray.h"
+#include "material.h"
+
+#include "../ui/TraceUI.h"
+extern TraceUI* traceUI;
 
 double DirectionalLight::distanceAttenuation( const vec3f& P ) const
 {

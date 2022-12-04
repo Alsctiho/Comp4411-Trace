@@ -1,8 +1,12 @@
 #pragma once
 
-#include "../scene/scene.h"
+#include "hyperplane.h"
+#include "..\scene\geometry.h"
+#include "..\vecmath\vecmath.h"
 
-class Plane : public NoneSceneObject
+class Geometry;
+
+class Plane : public Hyperplane
 {
 private:
 	vec3f n;	// Plane normal. Points x on the plane satisfy Dot(n, x) = d
@@ -11,15 +15,21 @@ private:
 public:
 	Plane() = delete;
 
-	Plane(Scene* scene, const vec3f& n, float d)
-		: NoneSceneObject(scene), n(n), d(d) {}
+	Plane(const vec3f& n, float d)
+		: Hyperplane(), n(n.normalize()), d(d) {}
 
-	Plane(Scene* scene, const vec3f& a, const vec3f& b, const vec3f& c)
-		: NoneSceneObject(scene)
+	Plane(const vec3f& n, const vec3f& p)
+		: Hyperplane(), n(n.normalize())
+	{
+		d = n.dot(p);
+	}
+
+	Plane(const vec3f& a, const vec3f& b, const vec3f& c)
+		: Hyperplane()
 	{
 		n = (b - a).cross(c - a).normalize();
-						// n * (X - p) = 0
-						// n * X - n * p = 0
+		// n * (X - p) = 0
+		// n * X - n * p = 0
 		d = n.dot(a);	// define n * p = d
 	}
 
@@ -30,12 +40,16 @@ public:
 	int TestHalfSpace(Geometry* geometry);
 	int TestHalfSpace(const vec3f& point);
 
-	static Plane GenerateRandomPlane(Scene* scene)
+	bool TestSameDirection(const vec3f& d) { return d.dot(n) > 0; }
+
+	const vec3f& getNormal() { return n; }
+
+	static vec3f GenerateRandomNormal()
 	{
 		float x, y, z;
 		x = (rand() % 100 - 50) / 100.0f;
 		y = (rand() % 100 - 50) / 100.0f;
 		z = (rand() % 100 - 50) / 100.0f;
-		return Plane(scene, vec3f(x, y, z).normalize(), 0.0f);
+		return vec3f(x, y, z).normalize();
 	}
 };

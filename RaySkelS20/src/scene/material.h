@@ -7,11 +7,10 @@
 #ifndef __MATERIAL_H__
 #define __MATERIAL_H__
 
+#include "light.h"
+#include "scene.h"
+#include "ray.h"
 #include "../vecmath/vecmath.h"
-
-class Scene;
-class ray;
-class isect;
 
 class Material
 {

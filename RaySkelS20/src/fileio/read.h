@@ -6,6 +6,8 @@
 
 #include "../scene/scene.h"
 
+using std::string;
+
 Scene *readScene( const string& filename );
 Scene *readScene( istream& is );
 

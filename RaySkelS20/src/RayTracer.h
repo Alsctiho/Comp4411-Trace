@@ -35,7 +35,7 @@ private:
 	Scene *scene;
 
 	bool m_bSceneLoaded;
-	stack<const Material*> materials;
+	std::stack<const Material*> materials;
 
 	friend class Camera;
 };

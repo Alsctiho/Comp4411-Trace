@@ -9,7 +9,9 @@
 #include <map>
 #include <iostream>
 
-using namespace std;
+using std::string;
+using std::istream;
+using std::ostream;
 
 class Exception
 {
@@ -30,8 +32,8 @@ inline ostream& operator <<( ostream& os, const Exception& x )
 
 class Obj;
 
-typedef vector<Obj*> 		mytuple;
-typedef map<string,Obj*> 	dict;
+typedef std::vector<Obj*> 		mytuple;
+typedef std::map<string,Obj*> 	dict;
 
 class ParseError
 	: public Exception

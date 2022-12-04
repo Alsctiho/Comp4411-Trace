@@ -12,7 +12,8 @@
 
 #define PI 3.14159265359
 
-using namespace std;
+using std::ostream;
+using std::istream;
 
 class vec3f;
 class vec4f;

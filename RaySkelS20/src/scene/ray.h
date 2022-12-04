@@ -8,37 +8,33 @@
 #define __RAY_H__
 
 #include "../vecmath/vecmath.h"
-#include "material.h"
 
 class SceneObject;
+class Material;
 
 // A ray has a position where the ray starts, and a direction (which should
 // always be normalized!)
 
 class ray {
 public:
-    ray() 
-        : ray(vec3f(), vec3f()) {}
-	/// <summary>
-	/// construct a ray by its position and direction.
-	/// </summary>
-	/// <param name="pp">position</param>
-	/// <param name="dd">direction</param>
-	ray( const vec3f& pp, const vec3f& dd )
-		: p( pp ), d( dd ) {}
-	ray( const ray& other ) 
-		: p( other.p ), d( other.d ) {}
-	~ray() {}
+    ray();
 
-	ray& operator =( const ray& other ) 
-	{ p = other.p; d = other.d; return *this; }
+    /// <summary>
+    /// construct a ray by its position and direction.
+    /// </summary>
+    /// <param name="pp">position</param>
+    /// <param name="dd">direction</param>
+    ray(const vec3f& pp, const vec3f& dd);
+    ray(const ray& other);
+    ~ray() {}
 
-	vec3f at( double t ) const
-	{ return p + (t*d); }
+    ray& operator =(const ray& other);
 
-	vec3f getPosition() const { return p; }
-	vec3f getDirection() const { return d; }
-    vec3f getIsecPosition(double t) const { return p + t * d; }
+    vec3f at(double t) const;
+
+    vec3f getPosition() const;
+    vec3f getDirection() const;
+    vec3f getIsecPosition(double t) const;
 
 protected:
 	vec3f p;
@@ -63,28 +59,7 @@ public:
     void setN( const vec3f& n ) { N = n; }
     void setMaterial( Material *m ) { delete material; material = m; }
         
-    isect& operator =( const isect& other )
-    {
-        if( this != &other )
-        {
-            obj = other.obj;
-            t = other.t;
-            N = other.N;
-//            material = other.material ? new Material( *(other.material) ) : 0;
-			if( other.material )
-            {
-                if( material )
-                    *material = *other.material;
-                else
-                    material = new Material(*other.material );
-            }
-            else
-            {
-                material = 0;
-            }
-        }
-        return *this;
-    }
+    isect& operator =(const isect& other);
 
 public:
     const SceneObject 	*obj;

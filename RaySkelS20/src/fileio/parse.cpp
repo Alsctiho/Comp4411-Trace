@@ -8,6 +8,10 @@
 
 #include "parse.h"
 
+using std::istream;
+using std::map;
+using std::vector;
+
 static string readID( istream& is );
 static Obj *readString( istream& is );
 static Obj *readScalar( istream& is );

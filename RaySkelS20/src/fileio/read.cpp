@@ -21,6 +21,14 @@
 #include "../SceneObjects/Square.h"
 #include "../scene/light.h"
 
+
+using std::map;
+using std::ifstream;
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::ostrstream;
+
 typedef map<string,Material*> mmap;
 
 static void processObject( Obj *obj, Scene *scene, mmap& materials );
@@ -82,7 +90,7 @@ Scene *readScene( istream& is )
 
 	if( version != 1.0 ) {
 		ostrstream oss;
-		oss << "Input is version " << version << ", need version 1.0" << ends;
+		oss << "Input is version " << version << ", need version 1.0" << std::ends;
 
 		throw ParseError( string( oss.str() ) );
 	}
@@ -114,7 +122,7 @@ static Obj *getColorField( Obj *obj )
 	}
 
 	const dict& d = obj->getDict();
-	dict::const_iterator i; 
+	map<string, Obj*>::const_iterator i; 
 	if( (i = d.find( "color" )) != d.end() ) {
 		return (*i).second;
 	}
@@ -135,7 +143,7 @@ static Obj *getField( Obj *obj, const string& name )
 	}
 
 	const dict& d = obj->getDict();
-	dict::const_iterator i; 
+	map<string, Obj*>::const_iterator i;
 	if( (i = d.find( name )) != d.end() ) {
 		return (*i).second;
 	}

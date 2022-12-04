@@ -13,3 +13,5 @@
 - [ ] more realistic shading model
     - [ ] Fresnel term
 - [ ] cel shading 
+- [x] binary space partition (BSP)
+    - [ ] Octree

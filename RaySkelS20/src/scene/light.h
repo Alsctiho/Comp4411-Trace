@@ -1,9 +1,10 @@
 #ifndef __LIGHT_H__
 #define __LIGHT_H__
 
-#include "scene.h"
-#include "../ui/TraceUI.h"
-extern TraceUI* traceUI;
+#include "sceneelement.h"
+#include "..\vecmath\vecmath.h"
+
+class SceneElement;
 
 class Light
 	: public SceneElement

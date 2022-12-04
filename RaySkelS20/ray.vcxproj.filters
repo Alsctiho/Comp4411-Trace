@@ -120,8 +120,20 @@
     <ClCompile Include="src\SceneObjects\trimesh.cpp">
       <Filter>Source Files\SceneObjects</Filter>
     </ClCompile>
-    <ClCompile Include="src\NonSceneObjects\Plane.cpp">
+    <ClCompile Include="src\NonSceneObjects\plane.cpp">
       <Filter>Source Files\NonSceneObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\bspnode.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NonSceneObjects\hyperplane.cpp">
+      <Filter>Source Files\NonSceneObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\geometry.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\boundingbox.cpp">
+      <Filter>Source Files\scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -179,8 +191,26 @@
     <ClInclude Include="src\SceneObjects\trimesh.h">
       <Filter>Header Files\SceneObjects.</Filter>
     </ClInclude>
-    <ClInclude Include="src\NonSceneObjects\Plane.h">
+    <ClInclude Include="src\NonSceneObjects\plane.h">
       <Filter>Header Files\NonSceneObject</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\bspnode.h">
+      <Filter>Header Files\scene.</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NonSceneObjects\hyperplane.h">
+      <Filter>Header Files\NonSceneObject</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\geometry.h">
+      <Filter>Header Files\scene.</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\transformnode.h">
+      <Filter>Header Files\scene.</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\sceneelement.h">
+      <Filter>Header Files\scene.</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\boundingbox.h">
+      <Filter>Header Files\scene.</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

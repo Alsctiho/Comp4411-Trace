@@ -3,6 +3,8 @@
 
 #include "ray.h"
 
+using std::vector;
+
 class Camera
 {
 public:

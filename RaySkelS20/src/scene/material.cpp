@@ -1,13 +1,14 @@
-#include "ray.h"
+
 #include "material.h"
-#include "light.h"
+
+#include <algorithm>
 
 namespace 
 {
 	double clamp(double d)
 	{
-		d = max(d, 0.0);
-		d = min(d, 1.0);
+		d = std::max(d, 0.0);
+		d = std::min(d, 1.0);
 		return d;
 	}
 }

@@ -14,6 +14,7 @@
 
 static bool done;
 
+using std::endl;
 
 //------------------------------------- Help Functions --------------------------------------------
 TraceUI* TraceUI::whoami(Fl_Menu_* o)	// from menu item back to UI itself
