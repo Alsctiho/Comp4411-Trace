@@ -12,7 +12,7 @@
 #include <memory>
  
 #include "camera.h"
-#include "bspnode.h"
+#include "spatialnode.h"
 #include "geometry.h"
 #include "light.h"
 #include "../vecmath/vecmath.h"
@@ -86,7 +86,13 @@ public:
 	void addAmbientLight(vec3f color);
 
 	bool intersect( const ray& r, isect& i ) const;
+
+	/// <summary>
+	/// Set up sp
+	/// </summary>
 	void initScene();
+
+	const BoundingBox& getSceneBoundingBox() const { return sceneBounds; }
 
 	list<Light*>::const_iterator beginLights() const { return lights.begin(); }
 	list<Light*>::const_iterator endLights() const { return lights.end(); }
@@ -102,7 +108,8 @@ private:
     list<Light*> lights;
     Camera camera;
 	AmbientLight* ambientLight;
-	std::shared_ptr<BSPNode> root;
+	std::shared_ptr<BSPNode> bsproot;
+	std::shared_ptr<OctNode> octroot;
 	
 	// Each object in the scene, provided that it has hasBoundingBoxCapability(),
 	// must fall within this bounding box.  Objects that don't have hasBoundingBoxCapability()

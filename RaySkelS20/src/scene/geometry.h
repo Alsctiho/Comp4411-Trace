@@ -23,7 +23,7 @@ public:
 
 
 	virtual bool hasBoundingBoxCapability() const;
-	BoundingBox getBoundingBox() const;
+	const BoundingBox& getBoundingBox() const;
 
 	/// <summary>
 	/// Axis-aligned bounding box (AABB)

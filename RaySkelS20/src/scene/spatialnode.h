@@ -12,10 +12,19 @@ using std::shared_ptr;
 class Plane;
 class Geometry;
 
-class BSPNode
+class SpatialNode
+{
+protected:
+	Scene* scene;
+
+public:
+	SpatialNode(Scene* scene) : scene(scene) {}
+	virtual bool intersect(const ray& r, isect& i) = 0;
+};
+
+class BSPNode : SpatialNode
 {
 private:
-	Scene* scene;
 	shared_ptr<Plane> plane;
 
 	list<Geometry*> geometries;
@@ -23,8 +32,15 @@ private:
 	shared_ptr<BSPNode> back;
 
 public:
-	BSPNode(Scene* scene, list<Geometry*> objs);
-	bool intersect(const ray& r, isect& i);
+	BSPNode(Scene* scene, const list<Geometry*> objs);
+	virtual bool intersect(const ray& r, isect& i);
 	bool intersectFront(const ray& r, isect& i);
 	bool intersectBack(const ray& r, isect& i);
+};
+
+class OctNode : SpatialNode
+{
+public:
+	OctNode(Scene* scene, const list<Geometry*> objs);
+	virtual bool intersect(const ray& r, isect& i);
 };

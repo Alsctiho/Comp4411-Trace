@@ -22,6 +22,18 @@ public:
 	// closest to the origin in tMin and the "t" value of the far intersection
 	// in tMax and return true, else return false.
 	bool intersect(const ray& r, double& tMin, double& tMax) const;
+
+	vec3f GenerateRandomPoint() const
+	{
+		// TODO
+	}
+
+	// This method makes this boundingbox bigger.
+	void mergeBoundingBox(const BoundingBox& other)
+	{
+		this->max = maximum(this->max, other.max);
+		this->min = maximum(this->min, other.min);
+	}
 };
 
 #endif //__BOUNDINGBOX_H__

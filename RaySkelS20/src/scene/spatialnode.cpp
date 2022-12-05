@@ -1,14 +1,17 @@
-#include "bspnode.h"
+#include "spatialnode.h"
+#include "scene.h"
 
-
-
-BSPNode::BSPNode(Scene* scene, list<Geometry*> objs)
-	: scene(scene), plane(nullptr)
+BSPNode::BSPNode(Scene* scene, const list<Geometry*> objs)
+	: SpatialNode(scene), plane(nullptr), front(nullptr), back(nullptr)
 {
-	std::cout << "hello\n";
+	//std::cout << "hello\n";
 	if (objs.size() <= 1)
 	{
-		geometries = std::move(objs);
+		typedef list<Geometry*>::const_iterator citer;
+		for (citer obj = objs.cbegin(); obj != objs.cend(); ++obj)
+		{
+			geometries.push_back(*obj);
+		}
 	}
 	else
 	{
@@ -20,9 +23,11 @@ BSPNode::BSPNode(Scene* scene, list<Geometry*> objs)
 		{
 			frontList.clear();
 			backList.clear();
+			geometries.clear();
 
 			// Init plane
 			vec3f pn = Plane::GenerateRandomNormal();
+			//vec3f pp = scene->getSceneBoundingBox().GenerateRandomPoint();
 			plane = std::make_shared<Plane> (pn, pp);
 
 			// test half space
@@ -57,20 +62,23 @@ bool BSPNode::intersect(const ray& r, isect& i)
 	isect cur;
 	typedef list<Geometry*>::const_iterator iter;
 	iter j;
+	bool have_one = false;
 
 	// no plane => is leaf
-	if (plane == nullptr)
+	if (front == nullptr && back == nullptr)
 	{
 		for (j = geometries.begin(); j != geometries.end(); ++j)
 		{
 			if ((*j)->intersect(r, cur))
 			{
-				i = cur;
-				return true;
+				if (!have_one || (cur.t < i.t)) {
+					i = cur;
+					have_one = true;
+				};
 			}
 		}
 
-		return false;
+		return have_one;
 	}
 	// has plane => is parent
 	else
@@ -99,15 +107,22 @@ bool BSPNode::intersectFront(const ray& r, isect& i)
 	if (front && front->intersect(r, i))
 		return true;
 
+
 	// current
+	bool have_one = false;
 	for (j = geometries.begin(); j != geometries.end(); ++j)
 	{
 		if ((*j)->intersect(r, cur))
 		{
-			i = cur;
-			return true;
+			if (!have_one || (cur.t < i.t)) {
+				i = cur;
+				have_one = true;
+			}
 		}
 	}
+
+	if (have_one)
+		return true;
 
 	// back
 	if (back && back->intersect(r, i))
@@ -127,18 +142,35 @@ bool BSPNode::intersectBack(const ray& r, isect& i)
 		return true;
 
 	// current
+	bool have_one = false;
 	for (j = geometries.begin(); j != geometries.end(); ++j)
 	{
 		if ((*j)->intersect(r, cur))
 		{
-			i = cur;
-			return true;
+			if (!have_one || (cur.t < i.t)) {
+				i = cur;
+				have_one = true;
+			}
 		}
 	}
+
+	if (have_one)
+		return true;
 
 	// front
 	if (front && front->intersect(r, i))
 		return true;
 
+	return false;
+}
+
+OctNode::OctNode(Scene* scene, const list<Geometry*> objs)
+	: SpatialNode(scene)
+{
+
+}
+
+bool OctNode::intersect(const ray& r, isect& i)
+{
 	return false;
 }

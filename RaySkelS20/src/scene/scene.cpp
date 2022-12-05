@@ -81,7 +81,7 @@ bool Scene::intersect( const ray& r, isect& i ) const
 		break;
 
 	case SpatialType::BSP:
-		if (root->intersect(r, cur))
+		if (bsproot->intersect(r, cur))
 		{
 			i = cur;
 			have_one = true;
@@ -89,6 +89,14 @@ bool Scene::intersect( const ray& r, isect& i ) const
 		break;
 
 	default:
+		for (j = boundedobjects.begin(); j != boundedobjects.end(); ++j) {
+			if ((*j)->intersect(r, cur)) {
+				if (!have_one || (cur.t < i.t)) {
+					i = cur;
+					have_one = true;
+				}
+			}
+		}
 		break;
 	}
 
@@ -115,27 +123,15 @@ void Scene::initScene()
 			else
 			{
 				b = (*j)->getBoundingBox();
-				sceneBounds.max = maximum(sceneBounds.max, b.max);
-				sceneBounds.min = minimum(sceneBounds.min, b.min);
+				sceneBounds.mergeBoundingBox(b);
 			}
 		}
 		else
 			nonboundedobjects.push_back(*j);
 	}
 
-	switch (traceUI->getSpatialStructure())
-	{
-	case SpatialType::Default:
-		break;
-
-	case SpatialType::BSP:
-		// construct bsp tree with boundedobjects
-		root = std::make_shared<BSPNode>(this, boundedobjects);
-		break;
-	
-	default:
-		break;
-	}
+	// construct bsp tree with boundedobjects
+	bsproot = std::make_shared<BSPNode>(this, boundedobjects);
 }
 
 vec3f Scene::getAmbientColor()

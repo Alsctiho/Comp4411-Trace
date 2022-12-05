@@ -8,8 +8,8 @@
 #define __MATERIAL_H__
 
 #include "light.h"
-#include "scene.h"
 #include "ray.h"
+#include "scene.h"
 #include "../vecmath/vecmath.h"
 
 class Material

@@ -41,7 +41,7 @@ bool Geometry::hasBoundingBoxCapability() const
 	return false;
 }
 
-BoundingBox Geometry::getBoundingBox() const
+const BoundingBox& Geometry::getBoundingBox() const
 {
 	return bounds;
 }

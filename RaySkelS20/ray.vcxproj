@@ -175,7 +175,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="src\scene\boundingbox.cpp" />
-    <ClCompile Include="src\scene\bspnode.cpp" />
+    <ClCompile Include="src\scene\spatialnode.cpp" />
     <ClCompile Include="src\scene\geometry.cpp" />
     <ClCompile Include="src\ui\TraceGLWindow.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -285,7 +285,7 @@
     <ClInclude Include="src\NonSceneObjects\plane.h" />
     <ClInclude Include="src\RayTracer.h" />
     <ClInclude Include="src\scene\boundingbox.h" />
-    <ClInclude Include="src\scene\bspnode.h" />
+    <ClInclude Include="src\scene\spatialnode.h" />
     <ClInclude Include="src\scene\geometry.h" />
     <ClInclude Include="src\scene\sceneelement.h" />
     <ClInclude Include="src\scene\transformnode.h" />

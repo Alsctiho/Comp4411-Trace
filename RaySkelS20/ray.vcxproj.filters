@@ -123,7 +123,7 @@
     <ClCompile Include="src\NonSceneObjects\plane.cpp">
       <Filter>Source Files\NonSceneObject</Filter>
     </ClCompile>
-    <ClCompile Include="src\scene\bspnode.cpp">
+    <ClCompile Include="src\scene\spatialnode.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
     <ClCompile Include="src\NonSceneObjects\hyperplane.cpp">
@@ -194,7 +194,7 @@
     <ClInclude Include="src\NonSceneObjects\plane.h">
       <Filter>Header Files\NonSceneObject</Filter>
     </ClInclude>
-    <ClInclude Include="src\scene\bspnode.h">
+    <ClInclude Include="src\scene\spatialnode.h">
       <Filter>Header Files\scene.</Filter>
     </ClInclude>
     <ClInclude Include="src\NonSceneObjects\hyperplane.h">

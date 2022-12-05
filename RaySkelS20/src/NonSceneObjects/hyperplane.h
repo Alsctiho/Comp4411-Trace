@@ -7,8 +7,5 @@
 /// </summary>
 class Hyperplane
 {
-private:
 
-protected:
-	Hyperplane() {}
 };
