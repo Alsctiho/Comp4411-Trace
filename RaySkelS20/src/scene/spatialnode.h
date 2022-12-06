@@ -8,7 +8,14 @@
 
 enum
 {
-
+	RFT, // right-front-top
+	RBT,
+	LBT,
+	LFT,
+	RFD, // right-front-down
+	RBD,
+	LBD, // left-back-down
+	LFD,
 };
 
 using std::list;
@@ -45,17 +52,22 @@ public:
 };
 
 /// <summary>
-/// ref: https://www.gamedev.net/articles/programming/general-and-gameplay-programming/introduction-to-octrees-r3529/
+/// 
 /// </summary>
 class OctNode : public SpatialNode
 {
 private:
+	bool isEmpty;
 	BoundingBox region;
+	list<Geometry*> tempObjs; // Only used in buildTree.
 	list<Geometry*> geometries;
-	vector<shared_ptr<BSPNode>> children;
+	vector<shared_ptr<OctNode>> children;
 
 public:
+	bool IsEmpty() const { return IsLeaf() && isEmpty; }
+	bool IsLeaf() const { return children.size() == 0; }
+
 	OctNode(Scene* scene, BoundingBox box);
-	void buidTree(list<Geometry*> objs);
+	void buildTree(list<Geometry*> objs);
 	virtual bool intersect(const ray& r, isect& i);
 };

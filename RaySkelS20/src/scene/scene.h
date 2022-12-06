@@ -87,9 +87,6 @@ public:
 
 	bool intersect( const ray& r, isect& i ) const;
 
-	/// <summary>
-	/// Set up sp
-	/// </summary>
 	void initScene();
 
 	const BoundingBox& getSceneBoundingBox() const { return sceneBounds; }

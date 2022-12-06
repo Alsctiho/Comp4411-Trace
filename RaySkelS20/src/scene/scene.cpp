@@ -88,6 +88,14 @@ bool Scene::intersect( const ray& r, isect& i ) const
 		}
 		break;
 
+	case SpatialType::Octree:
+		if (octroot->intersect(r, cur))
+		{
+			i = cur;
+			have_one = true;
+		}
+		break;
+
 	default:
 		for (j = boundedobjects.begin(); j != boundedobjects.end(); ++j) {
 			if ((*j)->intersect(r, cur)) {
@@ -133,7 +141,7 @@ void Scene::initScene()
 	// construct bsp tree with boundedobjects
 	bsproot = std::make_shared<BSPNode>(this, boundedobjects);
 	octroot = std::make_shared<OctNode>(this, sceneBounds);
-	octroot->buidTree(boundedobjects);
+	octroot->buildTree(boundedobjects);
 }
 
 vec3f Scene::getAmbientColor()

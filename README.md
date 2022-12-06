@@ -15,7 +15,7 @@
     - [ ] bounding volumn hierarchy (3B)
     - [x] binary space partition (3B)
         - [ ] buggy
-    - [ ] octree (3B)
+    - [x] octree (3B)
 - [ ] more realistic shading model
     - [ ] Fresnel term
 

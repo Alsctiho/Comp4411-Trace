@@ -7,8 +7,13 @@
 class BoundingBox
 {
 public:
-	vec3f min;
 	vec3f max;
+	vec3f min;
+
+	BoundingBox() : BoundingBox(vec3f(), vec3f()) {};
+	BoundingBox(vec3f max, vec3f min) { this->max = max; this->min = min; }
+	BoundingBox(float x1, float y1, float z1, float x2, float y2, float z2)
+		: BoundingBox(vec3f(x1, y1, z1), vec3f(x2, y2, z2)) {}
 
 	void operator=(const BoundingBox& target);
 
@@ -32,7 +37,7 @@ public:
 	void mergeBoundingBox(const BoundingBox& other)
 	{
 		this->max = maximum(this->max, other.max);
-		this->min = maximum(this->min, other.min);
+		this->min = minimum(this->min, other.min);
 	}
 };
 

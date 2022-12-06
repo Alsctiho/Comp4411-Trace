@@ -10,7 +10,7 @@ class Plane : public Hyperplane
 {
 private:
 	vec3f n;	// Plane normal. Points x on the plane satisfy Dot(n, x) = d
-	float d;	// d = dot(n, p) for a given point p on the plane
+	double d;	// d = dot(n, p) for a given point p on the plane
 
 public:
 	Plane() = delete;
