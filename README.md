@@ -22,3 +22,7 @@
 
 ### What else have I done?
 - better code structure, solve the circular dependencies
+
+
+### Reference
+How to implement [Octree](https://www.gamedev.net/articles/programming/general-and-gameplay-programming/introduction-to-octrees-r3529/).

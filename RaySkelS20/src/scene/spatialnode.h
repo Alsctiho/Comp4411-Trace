@@ -6,8 +6,14 @@
 #include "ray.h"
 #include "../NonSceneObjects/Plane.h"
 
+enum
+{
+
+};
+
 using std::list;
 using std::shared_ptr;
+using std::vector;
 
 class Plane;
 class Geometry;
@@ -22,7 +28,7 @@ public:
 	virtual bool intersect(const ray& r, isect& i) = 0;
 };
 
-class BSPNode : SpatialNode
+class BSPNode : public SpatialNode
 {
 private:
 	shared_ptr<Plane> plane;
@@ -38,9 +44,18 @@ public:
 	bool intersectBack(const ray& r, isect& i);
 };
 
-class OctNode : SpatialNode
+/// <summary>
+/// ref: https://www.gamedev.net/articles/programming/general-and-gameplay-programming/introduction-to-octrees-r3529/
+/// </summary>
+class OctNode : public SpatialNode
 {
+private:
+	BoundingBox region;
+	list<Geometry*> geometries;
+	vector<shared_ptr<BSPNode>> children;
+
 public:
-	OctNode(Scene* scene, const list<Geometry*> objs);
+	OctNode(Scene* scene, BoundingBox box);
+	void buidTree(list<Geometry*> objs);
 	virtual bool intersect(const ray& r, isect& i);
 };

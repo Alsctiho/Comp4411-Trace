@@ -132,6 +132,8 @@ void Scene::initScene()
 
 	// construct bsp tree with boundedobjects
 	bsproot = std::make_shared<BSPNode>(this, boundedobjects);
+	octroot = std::make_shared<OctNode>(this, sceneBounds);
+	octroot->buidTree(boundedobjects);
 }
 
 vec3f Scene::getAmbientColor()

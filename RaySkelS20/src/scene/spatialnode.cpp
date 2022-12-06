@@ -164,8 +164,13 @@ bool BSPNode::intersectBack(const ray& r, isect& i)
 	return false;
 }
 
-OctNode::OctNode(Scene* scene, const list<Geometry*> objs)
-	: SpatialNode(scene)
+OctNode::OctNode(Scene* scene, BoundingBox box)
+	: SpatialNode(scene), region(box)
+{
+
+}
+
+void OctNode::buidTree(list<Geometry*> objs)
 {
 
 }
